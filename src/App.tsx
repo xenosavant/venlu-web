@@ -15,7 +15,7 @@ import { Nav } from './components/Nav';
 import React from 'react';
 
 
-class App extends React.Component<{}, { mobileOpen: boolean, anchorEl: HTMLElement | null, filterOpen: boolean }> {
+class App extends React.Component<{}, { mobileOpen: boolean, open: boolean, anchorEl: HTMLElement | null, filterOpen: boolean }> {
 
   constructor(props: any) {
     super(props);
@@ -23,13 +23,12 @@ class App extends React.Component<{}, { mobileOpen: boolean, anchorEl: HTMLEleme
       mobileOpen: false,
       anchorEl: null,
       filterOpen: false,
+      open: false
     };
   }
 
-  open = false;
   menu = <></>;
   drawerWidth = 240;
-
   theme = createTheme({
     palette: {
       primary: {
@@ -52,15 +51,11 @@ class App extends React.Component<{}, { mobileOpen: boolean, anchorEl: HTMLEleme
   });
 
   handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ anchorEl: event.currentTarget, open: !this.state.open });
   };
 
   handleRoute = () => {
-    this.setState({ mobileOpen: !this.state.mobileOpen, anchorEl: null });
+    this.setState({ mobileOpen: !this.state.mobileOpen, open: false });
   }
 
   handleDrawerToggle = () => {
@@ -72,21 +67,7 @@ class App extends React.Component<{}, { mobileOpen: boolean, anchorEl: HTMLEleme
   };
 
   componentDidMount() {
-    this.open = Boolean(this.state.anchorEl);
-    this.menu = (
-      <Menu
-        className='p-0'
-        id="basic-menu"
-        anchorEl={this.state.anchorEl}
-        open={this.open}
-        onClose={this.handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <Nav handleRoute={this.handleRoute} />
-      </Menu>
-    )
+    this.setState({ open: Boolean(this.state.anchorEl) });
   }
 
   render() {
@@ -117,7 +98,17 @@ class App extends React.Component<{}, { mobileOpen: boolean, anchorEl: HTMLEleme
                 </IconButton>
               </Container>
             </AppBar>
-            {this.menu}
+            <Menu
+              className='hidden sm:inline-flex p-0'
+              id="basic-menu"
+              anchorEl={this.state.anchorEl}
+              open={this.state.open}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <Nav handleRoute={this.handleRoute} />
+            </Menu>
             <Box sx={{ margin: { sm: "0 16px" } }} className="margin-auto h-full mt-56">
               <Container sx={{ padding: '0', maxWidth: '2000px !important' }}>
                 <Box
