@@ -6,19 +6,23 @@ import { FiltersState, selectFilters } from '../state/reducers/filtersReducer';
 import {
   selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
 } from '../state/reducers/listingsReducer';
+import { selectUiState, UiState } from '../state/reducers/uiReducer';
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const listingsData = useAppSelector<ListingData>(selectListings);
   const filterData = useAppSelector<FiltersState>(selectFilters);
   const listingsStatus = useAppSelector<ResponseStatus>(getListingsStatus);
+  const uiState = useAppSelector<UiState>(selectUiState);
 
   useEffect(() => {
     dispatch(fetchListings([]));
   }, []);
 
   useEffect(() => {
-    dispatch(fetchListings(filterData.filters));
+    if (!uiState.filterModalOpen) {
+      dispatch(fetchListings(filterData.filters));
+    }
   }, [filterData]);
 
   return (

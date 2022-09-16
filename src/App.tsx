@@ -19,23 +19,31 @@ import { Bookings } from './pages/Bookings';
 import Nav from './components/Nav';
 import ListingDetail from './pages/ListingDetail';
 import FilterModal from './components/modals/FilterModal';
+import { useAppDispatch, useAppSelector } from './hooks/context';
+import {
+  filterModalClosed, filterModalOpened, selectUiState, UiState,
+} from './state/reducers/uiReducer';
 
 function App() {
+  const dispatch = useAppDispatch();
+
   const drawerWidth = 240;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  const uiState = useAppSelector<UiState>(selectUiState);
+
   const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleMobileFilterClick = () => {
-    setMobileFilterOpen(true);
+    dispatch(filterModalOpened());
   };
 
   const handleMobileFilterClose = () => {
-    setMobileFilterOpen(false);
+    dispatch(filterModalClosed());
   };
 
   const handleDrawerToggle = () => {
@@ -172,7 +180,7 @@ function App() {
                 }}
               >
                 <Filter />
-                {mobileFilterOpen && <FilterModal onClose={handleMobileFilterClose} />}
+                {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
               </Box>
               )}
             </Box>

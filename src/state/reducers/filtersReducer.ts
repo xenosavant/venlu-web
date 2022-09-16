@@ -1,19 +1,3 @@
-// const updateFilters = (filters: IFilter[]) => {
-//     // only update the filters and the count here
-//     setTimeout(() => fetch(`${BASE_URL}/listings`)
-//         .then((res) => res.json())
-//         .then((data: IListing[]) => {
-//             const filtered = filterData(data, filters);
-//             const facets = getFacets(filters, filtered);
-//             setFacets(facets, filters);
-//             console.log(listingProps)
-//             setListingProps({ ...listingProps, tempCount: filtered.length, filters: filters });
-//             setLoading(false);
-//         }).catch((err) => {
-//             setLoading(false);
-//         }), 1000);
-// }
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFilter } from '../../data/interfaces/filter';
 import { IFacet } from './listingsReducer';

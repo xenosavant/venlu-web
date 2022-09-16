@@ -9,7 +9,6 @@ export interface ListingState {
   listingsData: ListingData
   listingsStatus: ResponseStatus
   error: string | undefined
-  filters: IFilter[]
   filteredCount: number
 }
 
@@ -28,7 +27,6 @@ const initialState: ListingState = {
   listingsStatus: 'idle',
   error: undefined,
   listingsData: { listings: [], facets: [], count: 0 },
-  filters: [],
   filteredCount: 0,
 };
 
@@ -63,13 +61,20 @@ export const fetchListings = createAsyncThunk(
   },
 );
 
+export const fetchListingCount = createAsyncThunk(
+  'listings/fetchListingsCount',
+  async (filters: IFilter[]) => {
+    const response = await fetch('http://localhost:3000/listings');
+    const data = await response.json();
+    const filtered = filterData(data, filters);
+    return { filteredCount: filtered.length };
+  },
+);
+
 const listingSlice = createSlice({
   name: 'listing',
   initialState,
   reducers: {
-    filtersUpdated: (state, action: PayloadAction<IFilter[]>) => {
-      state.filters = action.payload;
-    },
     filterCountUpdated: (state, action: PayloadAction<number>) => {
       state.filteredCount = action.payload;
     },
@@ -86,6 +91,9 @@ const listingSlice = createSlice({
       .addCase(fetchListings.rejected, (state, action) => {
         state.error = action.error.message;
         state.listingsStatus = 'failed';
+      })
+      .addCase(fetchListingCount.fulfilled, (state, action) => {
+        state.filteredCount = action.payload.filteredCount;
       });
   },
 });
@@ -94,5 +102,5 @@ export const selectListings = (state: any) => state.listing.listingsData;
 export const getListingsStatus = (state: any) => state.listing.listingsStatus;
 export const getListingsError = (state: any) => state.listing.error;
 
-export const { filtersUpdated, filterCountUpdated } = listingSlice.actions;
+export const { filterCountUpdated } = listingSlice.actions;
 export default listingSlice.reducer;
