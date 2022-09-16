@@ -1,50 +1,40 @@
 import {
   Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Radio, Slider, Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { IFilter } from '../data/interfaces/filter';
+import { useAppDispatch, useAppSelector } from '../hooks/context';
+import {
+  filterFacetsUpdated,
+  FiltersState, filtersUpdated, selectFilters,
+} from '../state/reducers/filtersReducer';
+import { ListingData, selectListings } from '../state/reducers/listingsReducer';
 
-export function Filter({ onFilterChanged }: { onFilterChanged?: (filters: IFilter[]) => void, initialFilters?: IFilter[] }) {
+export default function Filter() {
+  const dispatch = useAppDispatch();
   // This Component should render the filters and manage their state internally
   // It should also react to filter input and update the listingState when the filter is selected
-  const defaultFilters: IFilter[] = [
-    {
-      type: 'checkbox',
-      key: 'type',
-      title: 'Event type',
-      options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
-        { key: 'bridal-shower', value: 'Bridal shower' }, { key: 'bachelorette', value: 'Bachelorette party' },
-        { key: 'bachelor', value: 'Bachelor party' }],
-      selected: [],
-    },
-    {
-      type: 'checkbox',
-      key: 'coverage',
-      title: 'Space',
-      options: [{ key: 'indoor', value: 'Indoor' }, { key: 'outdoor', value: 'Outdoor' }],
-      selected: [],
-    },
-  ];
 
-  /// Set the initial filters
-  const [filters, setFilters] = useState<IFilter[]>(defaultFilters);
+  const filterData = useAppSelector<FiltersState>(selectFilters);
+  const listingsData = useAppSelector<ListingData>(selectListings);
+
+  useEffect(() => {
+    dispatch(filterFacetsUpdated(listingsData.facets));
+  }, [listingsData]);
 
   const handleFilterUpdated = (key: string, value: string) => {
-    const filter = filters.find((filter: IFilter) => filter.key === key);
-    filter?.selected.includes(value) ? filter.selected = filter.selected.filter((selected: string) => selected !== value) : filter?.selected.push(value);
-    // onFilterChanged ? handleFiltersAndUpdateState([...filters]) : listingProviderProps?.updateListings?.(filters);
+    const filters = [...filterData.filters];
+    const filter = JSON.parse(JSON.stringify(filters.find((f) => f.key === key))) as IFilter;
+    if (filter?.selected.includes(value)) {
+      filter.selected = filter.selected.filter(
+        (selected: string) => selected !== value,
+      );
+    } else {
+      filter.selected.push(value);
+    }
+    dispatch(filtersUpdated([...filters.filter((f) => f.key !== filter.key), filter]
+      .sort((a, b) => a.order - b.order)));
   };
-
-  const handleFiltersAndUpdateState = (filters: IFilter[]) => {
-    (onFilterChanged != null) && onFilterChanged(filters);
-    setFilters(filters);
-  };
-
-  // useEffect(() => {
-  //     if (listingProviderProps?.filters?.length) {
-  //         setFilters && setFilters([...listingProviderProps?.filters]);
-  //     }
-  // }, [listingProviderProps?.filters])
 
   const typeMap = {
     checkbox: <Checkbox />,
@@ -54,7 +44,7 @@ export function Filter({ onFilterChanged }: { onFilterChanged?: (filters: IFilte
 
   return (
     <form>
-      {filters.map((filter: IFilter) => (filter.options.length > 0) && (
+      {filterData && filterData.filters?.map((filter: IFilter) => (filter.options.length > 0) && (
       <FormGroup className="mb-32" key={filter.key}>
         <FormLabel className="mb-16">{filter.title}</FormLabel>
         {filter.options.filter((o) => o?.count !== 0).map((option) => (
@@ -64,7 +54,7 @@ export function Filter({ onFilterChanged }: { onFilterChanged?: (filters: IFilte
               key={option.key}
               control={typeMap[filter.type]}
               label={option.value}
-              onChange={(e) => {
+              onChange={() => {
                 handleFilterUpdated(filter.key, option.key);
               }}
             />
@@ -72,9 +62,10 @@ export function Filter({ onFilterChanged }: { onFilterChanged?: (filters: IFilte
             <Box>
               {' '}
               <Typography variant="body2">
-                ({option.count}
+                (
+                {option.count}
                 )
-</Typography>
+              </Typography>
             </Box>
             )}
           </div>
