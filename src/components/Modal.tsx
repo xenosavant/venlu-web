@@ -15,10 +15,6 @@ export function Modal({
   onClose: () => void }) {
   const [open, setOpen] = useState(true);
 
-  const onCloseClicked = () => {
-    onClose();
-  };
-
   useEffect(() => {
     setOpen(true);
   }, [content]);
@@ -43,7 +39,7 @@ export function Modal({
                 color: (theme) => theme.palette.primary.main,
               }}
             >
-              <CloseIcon onClick={onCloseClicked} />
+              <CloseIcon />
             </IconButton>
           )
           : null}

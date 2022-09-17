@@ -13,11 +13,11 @@ export interface ListingState {
   error: string | undefined
   filteredCount: number
   filteredCountStatus: ResponseStatus
+  facets: IFacet[] | undefined
 }
 
 export interface ListingData {
   listings: IListing[]
-  facets: IFacet[]
   count: number
 }
 
@@ -29,9 +29,10 @@ export interface IFacet {
 const initialState: ListingState = {
   listingsStatus: 'idle',
   error: undefined,
-  listingsData: { listings: [], facets: [], count: 0 },
+  listingsData: { listings: [], count: 0 },
   filteredCount: 0,
   filteredCountStatus: 'idle',
+  facets: undefined,
 };
 
 function filterData(data: IListing[], filters: IFilter[]): IListing[] {
@@ -42,7 +43,7 @@ function filterData(data: IListing[], filters: IFilter[]): IListing[] {
   ));
 }
 
-function getFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
+function calculateFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
   return filters.map((filter: IFilter) => {
     const options = filter.options.map((option) => {
       const count = listings.filter(
@@ -57,11 +58,10 @@ function getFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
 export const fetchListings = createAsyncThunk(
   'listings/fetchListingsStatus',
   async (filters: IFilter[]) => {
-    console.log('fetchListings');
     await sleep();
     const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
     const filtered = filterData(response.data, filters);
-    const facets = getFacets(filters, filtered);
+    const facets = calculateFacets(filters, filtered);
     return { listings: filtered, facets, count: filtered.length };
   },
 );
@@ -90,7 +90,8 @@ const listingSlice = createSlice({
         state.listingsStatus = 'loading';
       })
       .addCase(fetchListings.fulfilled, (state, action) => {
-        state.listingsData = action.payload;
+        state.listingsData = { listings: action.payload.listings, count: action.payload.count };
+        state.facets = action.payload.facets;
         state.listingsStatus = 'success';
       })
       .addCase(fetchListings.rejected, (state, action) => {
@@ -107,6 +108,7 @@ export const selectListings = (state: any) => state.listing.listingsData;
 export const getListingsStatus = (state: any) => state.listing.listingsStatus;
 export const getListingsError = (state: any) => state.listing.error;
 export const getFilteredCount = (state: any) => state.listing.filteredCount;
+export const getFacets = (state: any) => state.listing.facets;
 
 export const { filterCountUpdated } = listingSlice.actions;
 export default listingSlice.reducer;

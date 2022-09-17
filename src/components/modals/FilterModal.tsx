@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { IFilter } from '../../data/interfaces/filter';
 import { useAppDispatch, useAppSelector } from '../../hooks/context';
-import { FiltersState, filtersUpdated, selectFilters } from '../../state/reducers/filtersReducer';
+import { filtersUpdated, getFilters } from '../../state/reducers/filtersReducer';
 import { fetchListings, fetchListingsCount, getFilteredCount } from '../../state/reducers/listingsReducer';
 import Filter from '../Filter';
 import { Modal } from '../Modal';
@@ -12,10 +12,10 @@ export default function FilterModal({ onClose }: { onClose: () => void }) {
 
   const [initialFilters, setInitialFilters] = useState<IFilter[]>([]);
 
-  const filterData = useAppSelector<FiltersState>(selectFilters);
+  const filters = useAppSelector<IFilter[]>(getFilters);
 
   const handleApplyFilters = () => {
-    dispatch(fetchListings(filterData.filters));
+    dispatch(fetchListings(filters));
     onClose();
   };
 
@@ -27,11 +27,11 @@ export default function FilterModal({ onClose }: { onClose: () => void }) {
   const filteredCount = useAppSelector<number>(getFilteredCount);
 
   useEffect(() => {
-    dispatch(fetchListingsCount(filterData.filters));
-  }, [filterData]);
+    dispatch(fetchListingsCount(filters));
+  }, [filters]);
 
   useEffect(() => {
-    setInitialFilters(filterData.filters);
+    setInitialFilters(filters);
   }, []);
 
   const actions = (

@@ -5,11 +5,10 @@ import { useEffect } from 'react';
 import { IFilter } from '../data/interfaces/filter';
 import { useAppDispatch, useAppSelector } from '../hooks/context';
 import {
-  filterFacetsUpdated,
-  filtersUpdated, selectFacets, selectFilters,
+  filtersUpdated, getFilters,
 } from '../state/reducers/filtersReducer';
 import {
-  fetchListingsCount, IFacet, ListingData, selectListings,
+  fetchListingsCount, getFacets, IFacet,
 } from '../state/reducers/listingsReducer';
 
 export default function Filter({ showFacets }: { showFacets: boolean }) {
@@ -17,17 +16,12 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
   // This Component should render the filters and manage their state internally
   // It should also react to filter input and update the listingState when the filter is selected
 
-  const filters = useAppSelector<IFilter[]>(selectFilters);
-  const facets = useAppSelector<IFacet[]>(selectFacets);
-  const listingsData = useAppSelector<ListingData>(selectListings);
+  const filters = useAppSelector<IFilter[]>(getFilters);
+  const facets = useAppSelector<IFacet[]>(getFacets);
 
   useEffect(() => {
-    dispatch(filterFacetsUpdated(listingsData.facets));
-  }, [listingsData]);
-
-  useEffect(() => {
-    console.log(facets);
-  }, [facets]);
+    console.log(filters);
+  }, []);
 
   const handleFilterUpdated = (key: string, value: string) => {
     const updatedFilters = [...filters];
@@ -42,7 +36,6 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
     const newFilterState = [...filters.filter((f) => f.key !== filter.key), filter]
       .sort((a, b) => a.order - b.order);
     dispatch(filtersUpdated(newFilterState));
-    dispatch(filterFacetsUpdated(listingsData.facets));
     dispatch(fetchListingsCount(updatedFilters));
   };
 
@@ -54,38 +47,38 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
 
   return (
     <form>
-      {filters && filters.map((filter: IFilter) => (filter.options.length > 0) && (
-      <FormGroup className="mb-32" key={filter.key}>
-        <FormLabel className="mb-16">{filter.title}</FormLabel>
-        {filter.options.filter((o) => (showFacets ? facets && facets.find(
-          (f) => f.key === o.key,
-        )?.count !== 0 : true))
-          .map((option) => (
-            <div key={option.key} className="flex items-center">
-              <FormControlLabel
-                checked={filter.selected.includes(option.key)}
-                key={option.key}
-                control={typeMap[filter.type]}
-                label={option.value}
-                onChange={() => {
-                  handleFilterUpdated(filter.key, option.key);
-                }}
-              />
-              { showFacets && (
-              <Box>
-                {' '}
-                <Typography variant="body2">
-                  (
-                  {facets.find(
-                    (f) => f.key === option.key,
-                  )?.count || 0}
-                  )
-                </Typography>
-              </Box>
-              )}
-            </div>
-          ))}
-      </FormGroup>
+      {filters && filters.map((filter: IFilter) => (
+        <FormGroup className="mb-32" key={filter.key}>
+          <FormLabel className="mb-16">{filter.title}</FormLabel>
+          {filter.options.filter((o) => (showFacets ? !facets || facets.find(
+            (f) => f.key === o.key,
+          )?.count !== 0 : true))
+            .map((option) => (
+              <div key={option.key} className="flex items-center">
+                <FormControlLabel
+                  checked={filter.selected.includes(option.key)}
+                  key={option.key}
+                  control={typeMap[filter.type]}
+                  label={option.value}
+                  onChange={() => {
+                    handleFilterUpdated(filter.key, option.key);
+                  }}
+                />
+                { showFacets && facets && (
+                <Box>
+                  {' '}
+                  <Typography variant="body2">
+                    (
+                    {facets.find(
+                      (f) => f.key === option.key,
+                    )?.count || 0}
+                    )
+                  </Typography>
+                </Box>
+                )}
+              </div>
+            ))}
+        </FormGroup>
       ))}
     </form>
   );

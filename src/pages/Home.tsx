@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import Listing from '../components/Listing';
 import { IFilter } from '../data/interfaces/filter';
 import { useAppDispatch, useAppSelector } from '../hooks/context';
-import { selectFilters } from '../state/reducers/filtersReducer';
+import { getFilters } from '../state/reducers/filtersReducer';
 import {
   selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
 } from '../state/reducers/listingsReducer';
@@ -12,7 +12,7 @@ import { selectUiState, UiState } from '../state/reducers/uiReducer';
 export default function Home() {
   const dispatch = useAppDispatch();
   const listingsData = useAppSelector<ListingData>(selectListings);
-  const filters = useAppSelector<IFilter[]>(selectFilters);
+  const filters = useAppSelector<IFilter[]>(getFilters);
   const listingsStatus = useAppSelector<ResponseStatus>(getListingsStatus);
   const uiState = useAppSelector<UiState>(selectUiState);
 
