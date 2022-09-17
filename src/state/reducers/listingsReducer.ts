@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { IListing } from '../../data/interfaces/listing';
 import { IFilter } from '../../data/interfaces/filter';
+import sleep from '../../utilities/sleep';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
@@ -10,6 +12,7 @@ export interface ListingState {
   listingsStatus: ResponseStatus
   error: string | undefined
   filteredCount: number
+  filteredCountStatus: ResponseStatus
 }
 
 export interface ListingData {
@@ -28,6 +31,7 @@ const initialState: ListingState = {
   error: undefined,
   listingsData: { listings: [], facets: [], count: 0 },
   filteredCount: 0,
+  filteredCountStatus: 'idle',
 };
 
 function filterData(data: IListing[], filters: IFilter[]): IListing[] {
@@ -53,21 +57,22 @@ function getFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
 export const fetchListings = createAsyncThunk(
   'listings/fetchListingsStatus',
   async (filters: IFilter[]) => {
-    const response = await fetch('http://localhost:3000/listings');
-    const data = await response.json();
-    const filtered = filterData(data, filters);
+    console.log('fetchListings');
+    await sleep();
+    const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
+    const filtered = filterData(response.data, filters);
     const facets = getFacets(filters, filtered);
     return { listings: filtered, facets, count: filtered.length };
   },
 );
 
-export const fetchListingCount = createAsyncThunk(
+export const fetchListingsCount = createAsyncThunk(
   'listings/fetchListingsCount',
   async (filters: IFilter[]) => {
-    const response = await fetch('http://localhost:3000/listings');
-    const data = await response.json();
-    const filtered = filterData(data, filters);
-    return { filteredCount: filtered.length };
+    await sleep();
+    const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
+    const filtered = filterData(response.data, filters);
+    return { count: filtered.length };
   },
 );
 
@@ -92,8 +97,8 @@ const listingSlice = createSlice({
         state.error = action.error.message;
         state.listingsStatus = 'failed';
       })
-      .addCase(fetchListingCount.fulfilled, (state, action) => {
-        state.filteredCount = action.payload.filteredCount;
+      .addCase(fetchListingsCount.fulfilled, (state, action) => {
+        state.filteredCount = action.payload.count;
       });
   },
 });
@@ -101,6 +106,7 @@ const listingSlice = createSlice({
 export const selectListings = (state: any) => state.listing.listingsData;
 export const getListingsStatus = (state: any) => state.listing.listingsStatus;
 export const getListingsError = (state: any) => state.listing.error;
+export const getFilteredCount = (state: any) => state.listing.filteredCount;
 
 export const { filterCountUpdated } = listingSlice.actions;
 export default listingSlice.reducer;

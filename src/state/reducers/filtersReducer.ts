@@ -2,22 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFilter } from '../../data/interfaces/filter';
 import { IFacet } from './listingsReducer';
 
-function setFacets(facets: IFacet[], filters: IFilter[]) {
-  filters.forEach(
-    (filter: IFilter) => {
-      filter.options.forEach(
-        (option) => {
-          option.count = facets.find((facet) => facet.key === option.key)?.count;
-        },
-      );
-    },
-  );
-}
-
 export type FilterType = 'checkbox' | 'radio';
 
 export interface FiltersState {
   filters: IFilter[];
+  facets: IFacet[];
 }
 
 const initialState: FiltersState = {
@@ -41,6 +30,7 @@ const initialState: FiltersState = {
       selected: [],
     },
   ],
+  facets: [],
 };
 
 const filtersSlice = createSlice({
@@ -51,13 +41,14 @@ const filtersSlice = createSlice({
       state.filters = action.payload;
     },
     filterFacetsUpdated: (state, action: PayloadAction<IFacet[]>) => {
-      setFacets(action.payload, state.filters);
+      state.facets = action.payload;
     },
   },
 });
 
 export const { filtersUpdated, filterFacetsUpdated } = filtersSlice.actions;
 
-export const selectFilters = (state: any) => state.filter;
+export const selectFilters = (state: any) => state.filter.filters;
+export const selectFacets = (state: any) => state.filter.facets;
 
 export default filtersSlice.reducer;

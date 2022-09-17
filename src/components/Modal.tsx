@@ -2,7 +2,7 @@ import {
   Dialog, DialogActions, DialogContent, DialogTitle, IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface DialogTitleProps {
   children?: React.ReactNode
@@ -11,13 +11,17 @@ export interface DialogTitleProps {
 
 export function Modal({
   content, title, actions, onClose,
-}: { content: JSX.Element, actions: JSX.Element, title: string, onClose: () => void }) {
+}: { content: JSX.Element, actions: JSX.Element, title: string,
+  onClose: () => void }) {
   const [open, setOpen] = useState(true);
 
   const onCloseClicked = () => {
-    setOpen(false);
     onClose();
   };
+
+  useEffect(() => {
+    setOpen(true);
+  }, [content]);
 
   return (
     <Dialog

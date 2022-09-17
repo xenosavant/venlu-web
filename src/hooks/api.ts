@@ -9,11 +9,15 @@ const fetchData = <T>(setData: React.Dispatch<React.SetStateAction<any>>,
   setLoading(true);
 
   fetchCall().then((res) => res.json()).then((data: T) => {
-    setData(data);
-    setLoading(false);
+    setTimeout(() => {
+      setData(data);
+      setLoading(false);
+    }, 1000);
   }).catch((err) => {
-    setError(err.message);
-    setLoading(false);
+    setTimeout(() => {
+      setError(err.message);
+      setLoading(false);
+    }, 1000);
   });
 };
 

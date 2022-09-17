@@ -179,7 +179,7 @@ function App() {
                   '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                 }}
               >
-                <Filter />
+                <Filter showFacets />
                 {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
               </Box>
               )}
