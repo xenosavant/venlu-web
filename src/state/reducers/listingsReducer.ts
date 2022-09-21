@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { IListing } from '../../data/interfaces/listing';
-import { IFilter } from '../../data/interfaces/filter';
+import { IFilter, IRange } from '../../data/interfaces/filter';
 import sleep from '../../utilities/sleep';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
@@ -23,7 +23,9 @@ export interface ListingData {
 
 export interface IFacet {
   key: string
-  count: number
+  count?: number
+  min?: number;
+  max?: number;
 }
 
 const initialState: ListingState = {
@@ -36,23 +38,42 @@ const initialState: ListingState = {
 };
 
 function filterData(data: IListing[], filters: IFilter[]): IListing[] {
-  return data.filter((item: IListing) => filters.every(
-    (filter: IFilter) => filter.selected.every(
+  const selectFiltered = data.filter((item: IListing) => filters.filter((f) => f.type === 'select').every(
+    (filter: IFilter) => filter.selected?.every(
       (selectedValue: string) => item.attributes[filter.key]?.includes(selectedValue),
     ),
   ));
+
+  console.log(selectFiltered);
+
+  const filtered = selectFiltered.filter((item: IListing) => filters.filter((f) => f.type === 'range').every(
+    (filter: IRange) => item[filter.key as keyof IListing] as number
+    >= (filter.min as number)
+        && item[filter.key as keyof IListing] as number
+         <= (filter.max as number),
+  ));
+  console.log(filtered);
+  return filtered;
 }
 
-function calculateFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
+function calculateSelectFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
   return filters.map((filter: IFilter) => {
-    const options = filter.options.map((option) => {
+    const options = (filter.options || []).map((option) => {
       const count = listings.filter(
         (listing: IListing) => listing.attributes[filter.key]?.includes(option.key),
       ).length;
       return { key: option.key, count };
     });
     return [...options];
-  }).reduce((prev, curr) => [...prev, ...curr], []);
+  }).reduce((acc, curr) => [...acc, ...curr], []);
+}
+
+function calculateRangeFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
+  return filters.map((filter: IFilter) => listings.reduce<IFacet>((acc: IFacet, curr: IListing) => {
+    const min = Math.min(acc.min as number, curr[filter.key as keyof IListing] as number);
+    const max = Math.max(acc.max as number, curr[filter.key as keyof IListing] as number);
+    return { key: filter.key, min, max };
+  }, { key: filter.key, min: Infinity, max: -Infinity }));
 }
 
 export const fetchListings = createAsyncThunk(
@@ -61,8 +82,13 @@ export const fetchListings = createAsyncThunk(
     await sleep();
     const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
     const filtered = filterData(response.data, filters);
-    const facets = calculateFacets(filters, filtered);
-    return { listings: filtered, facets, count: filtered.length };
+    const selectFacets = calculateSelectFacets(filters.filter((f) => f.type === 'select'), filtered);
+    const rangeFacets = calculateRangeFacets(filters.filter((f) => f.type === 'range'), response.data);
+    return {
+      listings: filtered,
+      facets: [...rangeFacets, ...selectFacets],
+      count: filtered.length,
+    };
   },
 );
 

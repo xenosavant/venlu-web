@@ -26,6 +26,10 @@ export default function Home() {
     }
   }, [filters]);
 
+  useEffect(() => {
+    console.log(listingsData);
+  }, [listingsData]);
+
   return (
     <>
       <Box>

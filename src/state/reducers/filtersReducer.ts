@@ -1,17 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IFilter } from '../../data/interfaces/filter';
+import { IRange, ISelect } from '../../data/interfaces/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
 export interface FiltersState {
-  filters: IFilter[];
+  filters: (ISelect | IRange)[];
 }
 
 const initialState: FiltersState = {
   filters: [
     {
-      type: 'checkbox',
+      type: 'range',
       order: 1,
+      key: 'price',
+      title: 'Price range',
+      min: 0,
+      max: 10000,
+    },
+    {
+      type: 'select',
+      selectType: 'checkbox',
+      order: 2,
       key: 'type',
       title: 'Event type',
       options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
@@ -20,8 +29,9 @@ const initialState: FiltersState = {
       selected: [],
     },
     {
-      type: 'checkbox',
-      order: 2,
+      type: 'select',
+      selectType: 'checkbox',
+      order: 3,
       key: 'coverage',
       title: 'Space',
       options: [{ key: 'indoor', value: 'Indoor' }, { key: 'outdoor', value: 'Outdoor' }],
@@ -34,7 +44,7 @@ const filtersSlice = createSlice({
   name: 'listing',
   initialState,
   reducers: {
-    filtersUpdated: (state, action: PayloadAction<IFilter[]>) => {
+    filtersUpdated: (state, action: PayloadAction<(ISelect | IRange)[]>) => {
       state.filters = action.payload;
     },
   },

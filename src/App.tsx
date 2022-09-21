@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from './hooks/context';
 import {
   filterModalClosed, filterModalOpened, selectUiState, UiState,
 } from './state/reducers/uiReducer';
+import useQuery from './hooks/query';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,8 @@ function App() {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const uiState = useAppSelector<UiState>(selectUiState);
+
+  const query = useQuery();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -66,6 +69,10 @@ function App() {
     setMobileOpen(!mobileOpen);
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    // set filters here base on use query
+  }, []);
 
   const nav = (
     <Nav handleRoute={handleRoute} />

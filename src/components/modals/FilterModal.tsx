@@ -24,6 +24,10 @@ export default function FilterModal({ onClose }: { onClose: () => void }) {
     onClose();
   };
 
+  const handleFilterUpdated = (updatedFilters: IFilter[]) => {
+    dispatch(fetchListingsCount(updatedFilters));
+  };
+
   const filteredCount = useAppSelector<number>(getFilteredCount);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export default function FilterModal({ onClose }: { onClose: () => void }) {
       {filteredCount === 0 && 'No listings match'}
     </Button>
   );
-  const content = <Filter showFacets={false} />;
+  const content = <Filter showFacets={false} onFilterUpdated={handleFilterUpdated} />;
 
   return (
     <Modal onClose={handleCancel} actions={actions} content={content} title="Fiters" />
