@@ -44,15 +44,12 @@ function filterData(data: IListing[], filters: IFilter[]): IListing[] {
     ),
   ));
 
-  console.log(selectFiltered);
-
   const filtered = selectFiltered.filter((item: IListing) => filters.filter((f) => f.type === 'range').every(
     (filter: IRange) => item[filter.key as keyof IListing] as number
     >= (filter.min as number)
         && item[filter.key as keyof IListing] as number
          <= (filter.max as number),
   ));
-  console.log(filtered);
   return filtered;
 }
 

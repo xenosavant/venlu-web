@@ -156,7 +156,6 @@ function App() {
               component="nav"
               sx={{ flexShrink: { sm: 0 } }}
             >
-              {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
               <Drawer
                 variant="temporary"
                 open={mobileOpen}
