@@ -1,10 +1,9 @@
 export interface IListing {
-  id: string;
+  id?: string;
   title: string;
   description?: string;
   images: string[];
-  primaryImageId: number;
+  primaryImageIndex: number;
   price: number;
-  duration: string;
   attributes: { [key: string]: string[] };
 }

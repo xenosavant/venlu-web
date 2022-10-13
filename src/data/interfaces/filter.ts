@@ -1,5 +1,7 @@
+import { IListing } from "./listing";
+
 export interface IFilterBase {
-  key: string;
+  key: FilterKeys;
   order: number;
   title: string;
   type: FilterType;
@@ -16,8 +18,10 @@ export interface ISelect extends IFilterBase {
 }
 
 export interface IRange extends IFilterBase {
-  min: number | undefined;
-  max: number | undefined;
+  min: number;
+  max: number;
 }
 
 export type IFilter = ISelect & IRange;
+
+export type FilterKeys = Partial<keyof IListing | 'type' | 'coverage'>;

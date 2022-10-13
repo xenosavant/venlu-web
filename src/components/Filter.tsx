@@ -10,17 +10,19 @@ import {
   filtersUpdated, getFilters,
 } from '../state/reducers/filtersReducer';
 import {
-  fetchListingsCount, getFacets, IFacet,
+  CountFacet,
+  fetchListingsCount, getFacets, IFacet, RangeFacet,
 } from '../state/reducers/listingsReducer';
+import clone from '../utilities/clone';
 
 export default function Filter({ showFacets, onFilterUpdated }:
-{ showFacets: boolean, onFilterUpdated?: (filters: IFilter[]) => void }) {
+  { showFacets: boolean, onFilterUpdated?: (filters: IFilter[]) => void }) {
   const dispatch = useAppDispatch();
   // This Component should render the filters and manage their state internally
   // It should also react to filter input and update the listingState when the filter is selected
 
   const filters = useAppSelector<IFilter[]>(getFilters);
-  const facets = useAppSelector<IFacet[]>(getFacets);
+  const facets = useAppSelector<(RangeFacet & CountFacet)[]>(getFacets);
 
   const [cachedFilters, setCachedFilters] = useState<IFilter[]>([]);
 
@@ -37,22 +39,22 @@ export default function Filter({ showFacets, onFilterUpdated }:
   }, []);
 
   const normalizeRange = (value: number, rangeMin: number, rangeMax: number):
-  number => ((value - rangeMin) / (rangeMax - rangeMin)) * 100;
+    number => ((value - rangeMin) / (rangeMax - rangeMin)) * 100;
 
-  const getRangeFacet = (key: string): IFacet => facets.find((f) => f.key === key) as IFacet;
+  const getRangeFacet = (key: string): RangeFacet => facets.find((f) => f.key === key) as RangeFacet;
 
   const denormalizeRange = (value: number, filterKey: string):
-  number => {
+    number => {
     const sliderRange = [
-      getRangeFacet(filterKey).min as number,
-      getRangeFacet(filterKey).max as number,
+      getRangeFacet(filterKey).min,
+      getRangeFacet(filterKey).max,
     ];
     return ((value / 100) * (sliderRange[1] - sliderRange[0])) + sliderRange[0];
   };
 
   const handleSelectUpdated = (key: string, value: string) => {
-    const clone = JSON.parse(JSON.stringify(cachedFilters)) as IFilter[];
-    const filter = clone.find((f) => f.key === key) as ISelect;
+    const cloned = clone<IFilter[]>(cachedFilters);
+    const filter = cloned.find((f) => f.key === key) as ISelect;
     if (filter.selected.includes(value)) {
       filter.selected = filter.selected.filter(
         (selected: string) => selected !== value,
@@ -60,27 +62,27 @@ export default function Filter({ showFacets, onFilterUpdated }:
     } else {
       filter.selected?.push(value);
     }
-    setCachedFilters(clone);
-    updateFilters(clone);
+    setCachedFilters(cloned);
+    updateFilters(cloned);
   };
 
   const handleRangeUpdated = (key: string, value: number[], activeThumb: number) => {
-    const clone = cachedFilters.map((f) => ({ ...f }));
-    const filter = clone.find((f) => f.key === key) as IRange;
+    const cloned = clone<IFilter[]>(cachedFilters)
+    const filter = cloned.find((f) => f.key === key) as IFilter;
     if (activeThumb === 0) {
       const max = denormalizeRange(value[1], key)
-      - ((getRangeFacet(key).max as number - (getRangeFacet(key).min as number)) / 10);
+        - ((getRangeFacet(key).max - (getRangeFacet(key).min)) / 10);
       filter.min = Math.min(max, denormalizeRange(value[0], key));
       filter.max = denormalizeRange(value[1], key);
     } else {
       const min = denormalizeRange(value[0], key)
-      + ((getRangeFacet(key).max as number - (getRangeFacet(key).min as number)) / 10);
+        + ((getRangeFacet(key).max - (getRangeFacet(key).min)) / 10);
       filter.max = Math.max(min, denormalizeRange(value[1], key));
       filter.min = denormalizeRange(value[0], key);
     }
 
-    setCachedFilters(clone);
-    updateFilters(clone);
+    setCachedFilters(cloned);
+    updateFilters(cloned);
   };
 
   const selectMap = {
@@ -96,32 +98,32 @@ export default function Filter({ showFacets, onFilterUpdated }:
           return (
             range.min !== undefined && range.max !== undefined
             && (
-            <FormGroup className="mb-32 mt-16" key={range.key}>
-              <FormLabel className="mb-16">{range.title}</FormLabel>
-              <Box className="mb-8">
-                {`$${range.min < (getRangeFacet(range.key).min as number)
-                  ? getRangeFacet(range.key).min?.toFixed() : range.min.toFixed(2)} -
+              <FormGroup className="mb-32 mt-16" key={range.key}>
+                <FormLabel className="mb-16">{range.title}</FormLabel>
+                <Box className="mb-8">
+                  {`$${range.min < (getRangeFacet(range.key).min)
+                    ? getRangeFacet(range.key).min?.toFixed() : range.min.toFixed(2)} -
                     $${(range.max)}${(range.max)
-                    < (getRangeFacet(range.key).max as number) ? '' : '+'}`}
-              </Box>
-              <Box className="mr-32">
-                <Slider
-                  value={[normalizeRange(
-                    range.min as number,
-                    getRangeFacet(range.key).min as number,
-                    getRangeFacet(range.key).max as number,
-                  ), normalizeRange(
-                    range.max as number,
-                    getRangeFacet(range.key).min as number,
-                    getRangeFacet(range.key).max as number,
-                  )]}
-                  onChange={(e, value, activeThumb) => {
-                    handleRangeUpdated(range.key, value as number[], activeThumb);
-                  }}
-                  disableSwap
-                />
-              </Box>
-            </FormGroup>
+                      < (getRangeFacet(range.key).max) ? '' : '+'}`}
+                </Box>
+                <Box className="mr-32">
+                  <Slider
+                    value={[normalizeRange(
+                      range.min,
+                      getRangeFacet(range.key).min,
+                      getRangeFacet(range.key).max,
+                    ), normalizeRange(
+                      range.max,
+                      getRangeFacet(range.key).min,
+                      getRangeFacet(range.key).max,
+                    )]}
+                    onChange={(e, value, activeThumb) => {
+                      handleRangeUpdated(range.key, value as number[], activeThumb);
+                    }}
+                    disableSwap
+                  />
+                </Box>
+              </FormGroup>
             )
           );
         })}
@@ -131,36 +133,36 @@ export default function Filter({ showFacets, onFilterUpdated }:
           return select.options.some((o) => facets.find(
             (f) => f.key === o.key,
           )?.count as number > 0) && (
-            <FormGroup className="mb-32 mt-16" key={select.key}>
-              <FormLabel className="mb-16">{select.title}</FormLabel>
-              {select.options.filter((o) => (showFacets ? !facets || facets.find(
-                (f) => f.key === o.key,
-              )?.count !== 0 : true))
-                .map((option) => (
-                  <Box key={option.key} className="flex items-center">
-                    <FormControlLabel
-                      checked={select.selected?.includes(option.key)}
-                      control={selectMap[select.selectType as SelectType]}
-                      label={option.value}
-                      onChange={() => {
-                        handleSelectUpdated(select.key, option.key);
-                      }}
-                    />
-                    { showFacets && facets && (
-                    <Box>
-                      <Typography variant="body2">
-                        (
-                        {facets.find(
-                          (f) => f.key === option.key,
-                        )?.count || 0}
-                        )
-                      </Typography>
+              <FormGroup className="mb-32 mt-16" key={select.key}>
+                <FormLabel className="mb-16">{select.title}</FormLabel>
+                {select.options.filter((o) => (showFacets ? !facets || facets.find(
+                  (f) => f.key === o.key,
+                )?.count !== 0 : true))
+                  .map((option) => (
+                    <Box key={option.key} className="flex items-center">
+                      <FormControlLabel
+                        checked={select.selected?.includes(option.key)}
+                        control={selectMap[select.selectType as SelectType]}
+                        label={option.value}
+                        onChange={() => {
+                          handleSelectUpdated(select.key, option.key);
+                        }}
+                      />
+                      {showFacets && facets && (
+                        <Box>
+                          <Typography variant="body2">
+                            (
+                            {facets.find(
+                              (f) => f.key === option.key,
+                            )?.count || 0}
+                            )
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
-                    )}
-                  </Box>
-                ))}
-            </FormGroup>
-          );
+                  ))}
+              </FormGroup>
+            );
         })}
     </form>
   );

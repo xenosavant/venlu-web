@@ -21,7 +21,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!uiState.filterModalOpen) {
+    if (!uiState.filterModalState) {
       dispatch(fetchListings(filters));
     }
   }, [filters]);

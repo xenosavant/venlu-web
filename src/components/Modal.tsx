@@ -11,8 +11,10 @@ export interface DialogTitleProps {
 
 export function Modal({
   content, title, actions, onClose,
-}: { content: JSX.Element, actions: JSX.Element, title: string,
-  onClose: () => void }) {
+}: {
+  content: JSX.Element, actions: JSX.Element, title: string,
+  onClose: () => void
+}) {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {

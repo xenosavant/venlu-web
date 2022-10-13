@@ -3,8 +3,8 @@ import {
   Routes, Route, useNavigate, useLocation,
 } from 'react-router-dom';
 import {
-  AppBar, Box, Container, Drawer, IconButton,
-  List, Menu, Toolbar, Typography,
+  AppBar, Box, Container, Dialog, Drawer, IconButton,
+  List, Menu, Modal, Popover, Toolbar, Typography,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -12,18 +12,23 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Home from './pages/Home';
 import Filter from './components/Filter';
-import { Favorites } from './pages/Favorites';
-import { Account } from './pages/Account';
+import Favorites from './pages/Favorites';
+import Account from './pages/Account';
 import { Settings } from './pages/Settings';
-import { Bookings } from './pages/Bookings';
+import Bookings from './pages/Bookings';
 import Nav from './components/Nav';
 import ListingDetail from './pages/ListingDetail';
 import FilterModal from './components/modals/FilterModal';
 import { useAppDispatch, useAppSelector } from './hooks/context';
 import {
+  createListingModalClosed,
   filterModalClosed, filterModalOpened, selectUiState, UiState,
 } from './state/reducers/uiReducer';
 import useQuery from './hooks/query';
+import { IListing } from './data/interfaces/listing';
+import CreateListingModal from './components/modals/CreateListingModal';
+import { CreateListing } from './components/CreateListing';
+import sleep from './utilities/sleep';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -39,7 +44,6 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const handleMobileFilterClick = () => {
     dispatch(filterModalOpened());
@@ -55,42 +59,20 @@ function App() {
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    console.log('open menu');
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setAnchorEl(null);
+    console.log('close menu')
   };
 
   const handleGoHome = () => {
     navigate('/');
   };
 
-  const handleRoute = () => {
-    setMobileOpen(!mobileOpen);
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    // set filters here base on use query
-  }, []);
-
   const nav = (
-    <Nav handleRoute={handleRoute} />
-  );
-
-  const menu = (
-    <Menu
-      className="p-0"
-      id="basic-menu"
-      anchorEl={anchorEl}
-      open={open}
-      onClose={handleClose}
-      MenuListProps={{
-        'aria-labelledby': 'basic-button',
-      }}
-    >
-      {nav}
-    </Menu>
+    <Nav handleRoute={handleDrawerToggle} />
   );
 
   const theme = createTheme({
@@ -149,7 +131,17 @@ function App() {
             </IconButton>
           </Container>
         </AppBar>
-        {menu}
+        <Menu
+          className="p-0"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          onClick={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}>
+          {nav}
+        </Menu>
         <Box sx={{ margin: { sm: '0 16px' } }} className="margin-auto h-full mt-56">
           <Container sx={{ padding: '0', maxWidth: '2000px !important' }}>
             <Box
@@ -175,19 +167,19 @@ function App() {
                 </List>
               </Drawer>
               {showSidebar && (
-              <Box
-                sx={{
-                  marginLeft: '16px',
-                  width: drawerWidth,
-                  marginTop: { sm: '114px' },
-                  display: { xs: 'none', sm: 'block' },
-                  position: 'fixed',
-                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                }}
-              >
-                <Filter showFacets />
-                {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
-              </Box>
+                <Box
+                  sx={{
+                    marginLeft: '16px',
+                    width: drawerWidth,
+                    marginTop: { sm: '114px' },
+                    display: { xs: 'none', sm: 'block' },
+                    position: 'fixed',
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                  }}
+                >
+                  <Filter showFacets />
+                  {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
+                </Box>
               )}
             </Box>
             <Box
@@ -210,6 +202,19 @@ function App() {
               </Routes>
             </Box>
           </Container>
+          <Modal open={uiState.createListingModalOpen}>
+            <>
+              <CreateListing
+                listing={{
+                  title: '',
+                  description: '',
+                  price: 0,
+                  images: [],
+                  primaryImageIndex: 0,
+                  attributes: {}
+                }}></CreateListing>
+            </>
+          </Modal>
         </Box>
       </Box>
     </ThemeProvider>

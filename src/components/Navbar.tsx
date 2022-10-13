@@ -1,8 +1,8 @@
-import { AppBar, Toolbar, IconButton } from '@mui/material';
+import { AppBar, IconButton } from '@mui/material';
 import { Container } from '@mui/system';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export function Navbar() {
+export default function Navbar() {
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl" className="flex items-center h-64">

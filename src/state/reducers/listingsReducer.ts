@@ -23,10 +23,17 @@ export interface ListingData {
 
 export interface IFacet {
   key: string
-  count?: number
-  min?: number;
-  max?: number;
 }
+
+export interface RangeFacet extends IFacet {
+  min: number;
+  max: number;
+}
+
+export interface CountFacet extends IFacet {
+  count: number;
+}
+
 
 const initialState: ListingState = {
   listingsStatus: 'idle',
@@ -46,9 +53,9 @@ function filterData(data: IListing[], filters: IFilter[]): IListing[] {
 
   const filtered = selectFiltered.filter((item: IListing) => filters.filter((f) => f.type === 'range').every(
     (filter: IRange) => item[filter.key as keyof IListing] as number
-    >= (filter.min as number)
-        && item[filter.key as keyof IListing] as number
-         <= (filter.max as number),
+      >= (filter.min)
+      && item[filter.key as keyof IListing] as number
+      <= (filter.max),
   ));
   return filtered;
 }
@@ -65,8 +72,8 @@ function calculateSelectFacets(filters: IFilter[], listings: IListing[]): IFacet
   }).reduce((acc, curr) => [...acc, ...curr], []);
 }
 
-function calculateRangeFacets(filters: IFilter[], listings: IListing[]): IFacet[] {
-  return filters.map((filter: IFilter) => listings.reduce<IFacet>((acc: IFacet, curr: IListing) => {
+function calculateRangeFacets(filters: IFilter[], listings: IListing[]): RangeFacet[] {
+  return filters.map((filter: IFilter) => listings.reduce<RangeFacet>((acc: RangeFacet, curr: IListing) => {
     const min = Math.min(acc.min as number, curr[filter.key as keyof IListing] as number);
     const max = Math.max(acc.max as number, curr[filter.key as keyof IListing] as number);
     return { key: filter.key, min, max };

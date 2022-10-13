@@ -24,7 +24,7 @@ export default function ListingDetail() {
       {!loading
                     && (
                     <Box className="overflow-hidden rounded-lg aspect-video">
-                      <img alt="" src={`/${listing?.images[listing?.primaryImageId || 0]}`} className="object-cover min-w-full min-h-full" />
+                      <img alt="" src={`/${listing?.images[listing?.primaryImageIndex || 0]}`} className="object-cover min-w-full min-h-full" />
                     </Box>
                     )}
     </Container>
