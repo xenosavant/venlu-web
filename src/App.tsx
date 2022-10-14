@@ -25,7 +25,7 @@ import {
   filterModalClosed, filterModalOpened, selectUiState, UiState,
 } from './state/reducers/uiReducer';
 import useQuery from './hooks/query';
-import { IListing } from './data/interfaces/listing';
+import { featureKeys, IListing } from './data/interfaces/listing';
 import CreateListingModal from './components/modals/CreateListingModal';
 import { CreateListing } from './components/CreateListing';
 import sleep from './utilities/sleep';
@@ -59,7 +59,6 @@ function App() {
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    console.log('open menu');
   };
 
   const handleClose = async () => {
@@ -211,7 +210,13 @@ function App() {
                   price: 0,
                   images: [],
                   primaryImageIndex: 0,
-                  attributes: {}
+                  capacity: 0,
+                  parkingCapacity: 0,
+                  features: {
+                    type: [],
+                    amenities: [],
+                    coverage: [],
+                  }
                 }}></CreateListing>
             </>
           </Modal>

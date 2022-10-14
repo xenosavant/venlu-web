@@ -1,4 +1,4 @@
-import { IListing } from "./listing";
+import { featureKeys, IListing } from "./listing";
 
 export interface IFilterBase {
   key: FilterKeys;
@@ -24,4 +24,4 @@ export interface IRange extends IFilterBase {
 
 export type IFilter = ISelect & IRange;
 
-export type FilterKeys = Partial<keyof IListing | 'type' | 'coverage'>;
+export type FilterKeys = Partial<keyof IListing | featureKeys>;

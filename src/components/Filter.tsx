@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   IFilter, SelectType, IRange, ISelect,
 } from '../data/interfaces/filter';
+import { featureKeys, keyFacetMap } from '../data/interfaces/listing';
 import { useAppDispatch, useAppSelector } from '../hooks/context';
 import {
   filtersUpdated, getFilters,
@@ -143,7 +144,7 @@ export default function Filter({ showFacets, onFilterUpdated }:
                       <FormControlLabel
                         checked={select.selected?.includes(option.key)}
                         control={selectMap[select.selectType as SelectType]}
-                        label={option.value}
+                        label={keyFacetMap[select.key as featureKeys][option.key]}
                         onChange={() => {
                           handleSelectUpdated(select.key, option.key);
                         }}

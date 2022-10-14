@@ -86,9 +86,9 @@ export function CreateListing({ listing }: HasListing) {
     </FormGroup>
   </Box>
 
-  const Attributes =
+  const features =
     <>
-      attributes
+      features
     </>
 
   const PhotoUpload =
@@ -125,7 +125,7 @@ export function CreateListing({ listing }: HasListing) {
   const steps: JSX.Element[] = [
     BasicInfo,
     PhotoUpload,
-    Attributes,
+    features,
   ]
 
   const handleCancel = () => dispatch(createListingModalClosed());
