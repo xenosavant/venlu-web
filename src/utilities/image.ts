@@ -10,7 +10,7 @@ export const createImage = (url: string): Promise<HTMLImageElement> =>
 export const getCroppedImg = async (
     imageSrc: string,
     pixelCrop: any
-): Promise<string> => {
+): Promise<Blob> => {
     const image: HTMLImageElement = (await createImage(imageSrc)) as HTMLImageElement;
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
@@ -32,9 +32,9 @@ export const getCroppedImg = async (
 
     ctx.putImageData(data, 0, 0)
 
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((file) => {
-            resolve(URL.createObjectURL(file as Blob));
+            resolve(file as Blob);
         }, 'image/jpeg')
     })
 }

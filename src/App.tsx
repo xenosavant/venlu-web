@@ -25,6 +25,7 @@ import {
 } from './state/reducers/uiReducer';
 import useQuery from './hooks/query';
 import { CreateListing } from './components/CreateListing';
+import { guid } from './utilities/rand';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -201,6 +202,7 @@ function App() {
             <>
               <CreateListing
                 listing={{
+                  id: guid(),
                   title: '',
                   description: '',
                   price: 0,

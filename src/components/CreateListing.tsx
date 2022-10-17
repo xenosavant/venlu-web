@@ -11,6 +11,10 @@ import { createListingModalClosed } from '../state/reducers/uiReducer';
 import { useAppDispatch } from '../hooks/context';
 import Cropper from 'react-easy-crop';
 import { createImage, getCroppedImg } from '../utilities/image';
+import { Web3Storage } from 'web3.storage';
+import { guid } from '../utilities/rand';
+
+const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
 
 export function CreateListing({ listing }: HasListing) {
   const [listingState, setlistingState] = useState<Partial<IListing>>(listing);
@@ -130,8 +134,11 @@ export function CreateListing({ listing }: HasListing) {
   const handleCancel = () => dispatch(createListingModalClosed());
 
   const cropImage = async () => {
-    const image = await getCroppedImg(currentImage as string, croppedAreaPixels);
-    listingState.images?.push(image);
+    const blob = await getCroppedImg(currentImage as string, croppedAreaPixels);
+    const identifier = guid();
+    const cid = await client.put([new File([blob], `${identifier}.jpg`)]);
+    console.log(`https://${cid}.ipfs.w3s.link/${identifier}.jpg`);
+    listingState.images?.push(`https://${cid}.ipfs.w3s.link/${identifier}.jpg`);
     setShowCropper(false);
   }
 
@@ -151,11 +158,6 @@ export function CreateListing({ listing }: HasListing) {
   const save = () => {
     // api call to save listing
   }
-
-  function updateStep(listing: Partial<IListing>) {
-    setlistingState({ ...listingState, ...listing });
-  };
-
 
   return (
     <Box className="bg-white fixed inset-0">
