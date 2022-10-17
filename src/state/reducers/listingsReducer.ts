@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { IListing } from '../../data/interfaces/listing';
+import { featureKeys, IListing } from '../../data/interfaces/listing';
 import { IFilter, IRange } from '../../data/interfaces/filter';
 import sleep from '../../utilities/sleep';
 
@@ -47,7 +47,7 @@ const initialState: ListingState = {
 function filterData(data: IListing[], filters: IFilter[]): IListing[] {
   const selectFiltered = data.filter((item: IListing) => filters.filter((f) => f.type === 'select').every(
     (filter: IFilter) => filter.selected?.every(
-      (selectedValue: string) => item.features[filter.key]?.includes(selectedValue),
+      (selectedValue: string) => item.features[filter.key as featureKeys]?.includes(selectedValue),
     ),
   ));
 
@@ -64,7 +64,7 @@ function calculateSelectFacets(filters: IFilter[], listings: IListing[]): IFacet
   return filters.map((filter: IFilter) => {
     const options = (filter.options || []).map((option) => {
       const count = listings.filter(
-        (listing: IListing) => listing.features[filter.key]?.includes(option.key),
+        (listing: IListing) => listing.features[filter.key as featureKeys]?.includes(option.key),
       ).length;
       return { key: option.key, count };
     });

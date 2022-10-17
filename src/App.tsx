@@ -21,14 +21,10 @@ import ListingDetail from './pages/ListingDetail';
 import FilterModal from './components/modals/FilterModal';
 import { useAppDispatch, useAppSelector } from './hooks/context';
 import {
-  createListingModalClosed,
   filterModalClosed, filterModalOpened, selectUiState, UiState,
 } from './state/reducers/uiReducer';
 import useQuery from './hooks/query';
-import { featureKeys, IListing } from './data/interfaces/listing';
-import CreateListingModal from './components/modals/CreateListingModal';
 import { CreateListing } from './components/CreateListing';
-import sleep from './utilities/sleep';
 
 function App() {
   const dispatch = useAppDispatch();

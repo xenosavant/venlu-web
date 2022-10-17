@@ -39,7 +39,6 @@ export function CreateListing({ listing }: HasListing) {
     if (/(gif|jpe?g|tiff?|png|webp|bmp|heic|heif)/g.test(file.type)) {
       const imageString = URL.createObjectURL(file);
       const image = await createImage(imageString);
-      console.log(imageString, image)
       const canvas = document.createElement("canvas");
       if (image.width > 800) {
         canvas.width = 800;
@@ -62,7 +61,7 @@ export function CreateListing({ listing }: HasListing) {
     input.current.click();
   }
 
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+  const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, [])
 

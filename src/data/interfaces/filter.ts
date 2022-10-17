@@ -24,4 +24,4 @@ export interface IRange extends IFilterBase {
 
 export type IFilter = ISelect & IRange;
 
-export type FilterKeys = Partial<keyof IListing | featureKeys>;
+export type FilterKeys = keyof IListing | featureKeys;
