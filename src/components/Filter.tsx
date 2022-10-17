@@ -93,7 +93,7 @@ export default function Filter({ showFacets, onFilterUpdated }:
 
   return (
     <form>
-      {cachedFilters && facets && facets.length && cachedFilters.filter((c) => c.type === 'range')
+      {cachedFilters && facets && facets.length !== 0 && cachedFilters.filter((c) => c.type === 'range')
         .map((filter) => {
           const range = filter as IRange;
           return (
@@ -128,7 +128,7 @@ export default function Filter({ showFacets, onFilterUpdated }:
             )
           );
         })}
-      {cachedFilters && facets && facets.length && cachedFilters.filter((c) => c.type === 'select')
+      {cachedFilters && facets && facets.length !== 0 && cachedFilters.filter((c) => c.type === 'select')
         .map((filter) => {
           const select = filter as ISelect;
           return select.options.some((o) => facets.find(
@@ -155,7 +155,7 @@ export default function Filter({ showFacets, onFilterUpdated }:
                             (
                             {facets.find(
                               (f) => f.key === option.key,
-                            )?.count || 0}
+                            )?.count}
                             )
                           </Typography>
                         </Box>

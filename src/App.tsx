@@ -1,23 +1,18 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import {
   Routes, Route, useNavigate, useLocation,
 } from 'react-router-dom';
 import {
   AppBar, Box, Container, Dialog, Drawer, IconButton,
-  List, Menu, Modal, Popover, Toolbar, Typography,
+  List, Menu, Modal, Popover, Toolbar, Typography, CircularProgress,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import Home from './pages/Home';
 import Filter from './components/Filter';
-import Favorites from './pages/Favorites';
-import Account from './pages/Account';
-import { Settings } from './pages/Settings';
 import Bookings from './pages/Bookings';
 import Nav from './components/Nav';
-import ListingDetail from './pages/ListingDetail';
 import FilterModal from './components/modals/FilterModal';
 import { useAppDispatch, useAppSelector } from './hooks/context';
 import {
@@ -26,6 +21,12 @@ import {
 import useQuery from './hooks/query';
 import { CreateListing } from './components/CreateListing';
 import { guid } from './utilities/rand';
+
+const Home = lazy(() => import('./pages/Home'));
+const Favorites = lazy(() => import('./pages/Favorites'));
+const Account = lazy(() => import('./pages/Account'));
+const Settings = lazy(() => import('./pages/Settings'));
+const ListingDetail = lazy(() => import('./pages/ListingDetail'));
 
 function App() {
   const dispatch = useAppDispatch();
@@ -70,6 +71,8 @@ function App() {
   const nav = (
     <Nav handleRoute={handleDrawerToggle} />
   );
+
+  const loading = <CircularProgress className="mt-24" size="24px" color="primary" />;
 
   const theme = createTheme({
     palette: {
@@ -174,9 +177,9 @@ function App() {
                   }}
                 >
                   <Filter showFacets />
-                  {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
                 </Box>
               )}
+              {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
             </Box>
             <Box
               sx={{
@@ -189,12 +192,12 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/bookings" element={<Bookings />} />
-                <Route path="/profile" element={<Account />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/listings/:id" element={<ListingDetail />} />
+                <Route path="/" element={<Suspense fallback={loading}><Home /></Suspense>} />
+                <Route path="/favorites" element={<Suspense fallback={loading}><Favorites /></Suspense>} />
+                <Route path="/bookings" element={<Suspense fallback={loading}><Bookings /></Suspense>} />
+                <Route path="/profile" element={<Suspense fallback={loading}><Account /></Suspense>} />
+                <Route path="/settings" element={<Suspense fallback={loading}><Settings /></Suspense>} />
+                <Route path="/listings/:id" element={<Suspense fallback={loading}><ListingDetail /></Suspense>} />
               </Routes>
             </Box>
           </Container>
