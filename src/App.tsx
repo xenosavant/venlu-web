@@ -61,7 +61,6 @@ function App() {
 
   const handleClose = async () => {
     setAnchorEl(null);
-    console.log('close menu')
   };
 
   const handleGoHome = () => {

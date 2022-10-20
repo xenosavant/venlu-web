@@ -1,9 +1,8 @@
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { IFilter } from '../../data/interfaces/filter';
 import { Closeable } from '../../data/interfaces/props';
 import { useAppDispatch, useAppSelector } from '../../hooks/context';
-import { filtersUpdated, getFilters } from '../../state/reducers/filtersReducer';
+import { IFilter, filtersUpdated, getFilters } from '../../state/reducers/filtersReducer';
 import { fetchListings, fetchListingsCount, getFilteredCount } from '../../state/reducers/listingsReducer';
 import Filter from '../Filter';
 import { Modal } from '../Modal';
@@ -11,9 +10,9 @@ import { Modal } from '../Modal';
 export default function FilterModal({ onClose }: Closeable) {
   const dispatch = useAppDispatch();
 
-  const [initialFilters, setInitialFilters] = useState<IFilter[]>([]);
+  const [initialFilters, setInitialFilters] = useState<IFilter>({ select: [], range: [] });
 
-  const filters = useAppSelector<IFilter[]>(getFilters);
+  const filters = useAppSelector<IFilter>(getFilters);
 
   const handleApplyFilters = () => {
     dispatch(fetchListings(filters));
@@ -25,10 +24,6 @@ export default function FilterModal({ onClose }: Closeable) {
     onClose();
   };
 
-  const handleFilterUpdated = (updatedFilters: IFilter[]) => {
-    dispatch(fetchListingsCount(updatedFilters));
-  };
-
   const filteredCount = useAppSelector<number>(getFilteredCount);
 
   useEffect(() => {
@@ -36,6 +31,7 @@ export default function FilterModal({ onClose }: Closeable) {
   }, [filters]);
 
   useEffect(() => {
+    console.log(filters);
     setInitialFilters(filters);
   }, []);
 
@@ -52,7 +48,7 @@ export default function FilterModal({ onClose }: Closeable) {
       {filteredCount === 0 && 'No listings match'}
     </Button>
   );
-  const content = <Filter showFacets={false} onFilterUpdated={handleFilterUpdated} />;
+  const content = <Filter showFacets={false} />;
 
   return (
     <Modal onClose={handleCancel} actions={actions} content={content} title="Fiters" />

@@ -8,6 +8,7 @@ export const keyFacetMap: Record<featureKeys, FeatureFacet> = {
   type: {
     'bachelor': 'Bachelor party',
     'bachelorette': 'Bachelorette party',
+    'bridal-shower': 'Bridal shower',
     'wedding': 'Wedding',
     'reception': 'Reception',
   },

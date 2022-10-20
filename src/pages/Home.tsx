@@ -1,9 +1,8 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import Listing from '../components/Listing';
-import { IFilter } from '../data/interfaces/filter';
 import { useAppDispatch, useAppSelector } from '../hooks/context';
-import { getFilters } from '../state/reducers/filtersReducer';
+import { IFilter, getFilters } from '../state/reducers/filtersReducer';
 import {
   selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
 } from '../state/reducers/listingsReducer';
@@ -12,15 +11,17 @@ import { selectUiState, UiState } from '../state/reducers/uiReducer';
 export default function Home() {
   const dispatch = useAppDispatch();
   const listingsData = useAppSelector<ListingData>(selectListings);
-  const filters = useAppSelector<IFilter[]>(getFilters);
+  const filters = useAppSelector<IFilter>(getFilters);
   const listingsStatus = useAppSelector<ResponseStatus>(getListingsStatus);
   const uiState = useAppSelector<UiState>(selectUiState);
 
   useEffect(() => {
-    dispatch(fetchListings([]));
+    console.log(filters);
+    dispatch(fetchListings());
   }, []);
 
   useEffect(() => {
+    console.log(filters);
     if (!uiState.filterModalOpen) {
       dispatch(fetchListings(filters));
     }

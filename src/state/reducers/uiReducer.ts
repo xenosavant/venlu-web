@@ -15,18 +15,15 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     filterModalOpened: (state) => {
-      console.log('fmo')
       state.filterModalOpen = true;
     },
     filterModalClosed: (state) => {
       state.filterModalOpen = false;
     },
     createListingModalOpened: (state) => {
-      console.log('clmo')
       state.createListingModalOpen = true;
     },
     createListingModalClosed: (state) => {
-      console.log('clmc')
       state.createListingModalOpen = false;
     },
   },

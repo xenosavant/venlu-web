@@ -137,7 +137,6 @@ export function CreateListing({ listing }: HasListing) {
     const blob = await getCroppedImg(currentImage as string, croppedAreaPixels);
     const identifier = guid();
     const cid = await client.put([new File([blob], `${identifier}.jpg`)]);
-    console.log(`https://${cid}.ipfs.w3s.link/${identifier}.jpg`);
     listingState.images?.push(`https://${cid}.ipfs.w3s.link/${identifier}.jpg`);
     setShowCropper(false);
   }

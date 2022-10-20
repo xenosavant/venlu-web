@@ -3,11 +3,12 @@ import {
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  IFilter, SelectType, IRange, ISelect,
+  SelectType, IRange, ISelect,
 } from '../data/interfaces/filter';
 import { featureKeys, keyFacetMap } from '../data/interfaces/listing';
 import { useAppDispatch, useAppSelector } from '../hooks/context';
 import {
+  IFilter,
   filtersUpdated, getFilters,
 } from '../state/reducers/filtersReducer';
 import {
@@ -16,27 +17,25 @@ import {
 } from '../state/reducers/listingsReducer';
 import clone from '../utilities/clone';
 
-export default function Filter({ showFacets, onFilterUpdated }:
-  { showFacets: boolean, onFilterUpdated?: (filters: IFilter[]) => void }) {
+export default function Filter({ showFacets }:
+  { showFacets: boolean }) {
   const dispatch = useAppDispatch();
   // This Component should render the filters and manage their state internally
   // It should also react to filter input and update the listingState when the filter is selected
 
-  const filters = useAppSelector<IFilter[]>(getFilters);
+  const filters = useAppSelector<IFilter>(getFilters);
   const facets = useAppSelector<(RangeFacet & CountFacet)[]>(getFacets);
 
-  const [cachedFilters, setCachedFilters] = useState<IFilter[]>([]);
+  const [cachedFilters, setCachedFilters] = useState<IFilter>({ select: [], range: [] });
 
-  const updateFilters = useCallback(debounce((updates: IFilter[]) => {
+  const updateFilters = useCallback(debounce((updates: IFilter) => {
     // update the store with the locally cached filters
     dispatch(filtersUpdated(updates));
-    onFilterUpdated?.(updates);
     dispatch(fetchListingsCount(updates));
   }, 1000), []);
 
   useEffect(() => {
-    // update the local state when the filter component is mounted
-    setCachedFilters(filters.map((filter) => ({ ...filter })));
+    setCachedFilters(clone(filters));
   }, []);
 
   const normalizeRange = (value: number, rangeMin: number, rangeMax: number):
@@ -54,8 +53,8 @@ export default function Filter({ showFacets, onFilterUpdated }:
   };
 
   const handleSelectUpdated = (key: string, value: string) => {
-    const cloned = clone<IFilter[]>(cachedFilters);
-    const filter = cloned.find((f) => f.key === key) as ISelect;
+    const cloned = clone<IFilter>(cachedFilters);
+    const filter = cloned.select.find((f) => f.key === key) as ISelect;
     if (filter.selected.includes(value)) {
       filter.selected = filter.selected.filter(
         (selected: string) => selected !== value,
@@ -68,8 +67,8 @@ export default function Filter({ showFacets, onFilterUpdated }:
   };
 
   const handleRangeUpdated = (key: string, value: number[], activeThumb: number) => {
-    const cloned = clone<IFilter[]>(cachedFilters)
-    const filter = cloned.find((f) => f.key === key) as IFilter;
+    const cloned = clone<IFilter>(cachedFilters)
+    const filter = cloned.range.find((f) => f.key === key) as IRange;
     if (activeThumb === 0) {
       const max = denormalizeRange(value[1], key)
         - ((getRangeFacet(key).max - (getRangeFacet(key).min)) / 10);
@@ -93,33 +92,32 @@ export default function Filter({ showFacets, onFilterUpdated }:
 
   return (
     <form>
-      {cachedFilters && facets && facets.length !== 0 && cachedFilters.filter((c) => c.type === 'range')
+      {cachedFilters && facets && facets.length !== 0 && cachedFilters.range
         .map((filter) => {
-          const range = filter as IRange;
           return (
-            range.min !== undefined && range.max !== undefined
+            filter.min !== undefined && filter.max !== undefined
             && (
-              <FormGroup className="mb-32 mt-16" key={range.key}>
-                <FormLabel className="mb-16">{range.title}</FormLabel>
+              <FormGroup className="mb-32 mt-16" key={filter.key}>
+                <FormLabel className="mb-16">{filter.title}</FormLabel>
                 <Box className="mb-8">
-                  {`$${range.min < (getRangeFacet(range.key).min)
-                    ? getRangeFacet(range.key).min?.toFixed() : range.min.toFixed(2)} -
-                    $${(range.max)}${(range.max)
-                      < (getRangeFacet(range.key).max) ? '' : '+'}`}
+                  {`$${filter.min < (getRangeFacet(filter.key).min)
+                    ? getRangeFacet(filter.key).min?.toFixed() : filter.min.toFixed(2)} -
+                    $${(filter.max)}${(filter.max)
+                      < (getRangeFacet(filter.key).max) ? '' : '+'}`}
                 </Box>
                 <Box className="mr-32">
                   <Slider
                     value={[normalizeRange(
-                      range.min,
-                      getRangeFacet(range.key).min,
-                      getRangeFacet(range.key).max,
+                      filter.min,
+                      getRangeFacet(filter.key).min,
+                      getRangeFacet(filter.key).max,
                     ), normalizeRange(
-                      range.max,
-                      getRangeFacet(range.key).min,
-                      getRangeFacet(range.key).max,
+                      filter.max,
+                      getRangeFacet(filter.key).min,
+                      getRangeFacet(filter.key).max,
                     )]}
                     onChange={(e, value, activeThumb) => {
-                      handleRangeUpdated(range.key, value as number[], activeThumb);
+                      handleRangeUpdated(filter.key, value as number[], activeThumb);
                     }}
                     disableSwap
                   />
@@ -128,25 +126,24 @@ export default function Filter({ showFacets, onFilterUpdated }:
             )
           );
         })}
-      {cachedFilters && facets && facets.length !== 0 && cachedFilters.filter((c) => c.type === 'select')
+      {cachedFilters && facets && facets.length !== 0 && cachedFilters.select
         .map((filter) => {
-          const select = filter as ISelect;
-          return select.options.some((o) => facets.find(
+          return filter.options.some((o) => facets.find(
             (f) => f.key === o.key,
           )?.count as number > 0) && (
-              <FormGroup className="mb-32 mt-16" key={select.key}>
-                <FormLabel className="mb-16">{select.title}</FormLabel>
-                {select.options.filter((o) => (showFacets ? !facets || facets.find(
+              <FormGroup className="mb-32 mt-16" key={filter.key}>
+                <FormLabel className="mb-16">{filter.title}</FormLabel>
+                {filter.options.filter((o) => (showFacets ? !facets || facets.find(
                   (f) => f.key === o.key,
                 )?.count !== 0 : true))
                   .map((option) => (
                     <Box key={option.key} className="flex items-center">
                       <FormControlLabel
-                        checked={select.selected?.includes(option.key)}
-                        control={selectMap[select.selectType as SelectType]}
-                        label={keyFacetMap[select.key as featureKeys][option.key]}
+                        checked={filter.selected?.includes(option.key)}
+                        control={selectMap[filter.selectType]}
+                        label={keyFacetMap[filter.key][option.key]}
                         onChange={() => {
-                          handleSelectUpdated(select.key, option.key);
+                          handleSelectUpdated(filter.key, option.key);
                         }}
                       />
                       {showFacets && facets && (

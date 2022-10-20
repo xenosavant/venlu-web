@@ -3,48 +3,55 @@ import { IRange, ISelect } from '../../data/interfaces/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
-export interface FiltersState {
-  filters: (ISelect | IRange)[];
+export interface IFilter {
+  select: ISelect[],
+  range: IRange[],
 }
 
-const initialState: FiltersState = {
-  filters: [
-    {
-      type: 'range',
-      order: 1,
-      key: 'price',
-      title: 'Price range',
-      min: 0,
-      max: 10000,
-    },
-    {
-      type: 'select',
-      selectType: 'checkbox',
-      order: 2,
-      key: 'type',
-      title: 'Event type',
-      options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
+export interface FilterState {
+  filters: IFilter
+}
+
+const initialState: FilterState = {
+  filters: {
+    range: [
+      {
+        order: 1,
+        key: 'price',
+        title: 'Price range',
+        min: 0,
+        max: 10000,
+      }
+    ],
+    select: [
+      {
+        selectType: 'checkbox',
+        order: 2,
+        key: 'type',
+        title: 'Event type',
+        options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
         { key: 'bridal-shower', value: 'Bridal shower' }, { key: 'bachelorette', value: 'Bachelorette party' },
         { key: 'bachelor', value: 'Bachelor party' }],
-      selected: [],
-    },
-    {
-      type: 'select',
-      selectType: 'checkbox',
-      order: 3,
-      key: 'coverage',
-      title: 'Space',
-      options: [{ key: 'indoor', value: 'Indoor' }, { key: 'outdoor', value: 'Outdoor' }],
-      selected: [],
-    },
-  ],
+        selected: [],
+      },
+      {
+        selectType: 'checkbox',
+        order: 3,
+        key: 'coverage',
+        title: 'Space',
+        options: [{ key: 'indoor', value: 'Indoor' }, { key: 'outdoor', value: 'Outdoor' }],
+        selected: [],
+      },
+    ],
+  }
 };
 
 const filtersSlice = createSlice({
-  name: 'listing',
+  name: 'filters',
   initialState,
   reducers: {
-    filtersUpdated: (state, action: PayloadAction<(ISelect | IRange)[]>) => {
+    filtersUpdated: (state, action: PayloadAction<IFilter>) => {
+      console.log('filtersUpdated', action.payload);
       state.filters = action.payload;
     },
   },
