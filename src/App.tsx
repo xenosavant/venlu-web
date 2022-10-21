@@ -10,23 +10,23 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import Filter from './components/Filter';
-import Bookings from './pages/Bookings';
+import Filter from './features/filter/Filter';
+import Bookings from './routes/Bookings';
 import Nav from './components/Nav';
 import FilterModal from './components/modals/FilterModal';
-import { useAppDispatch, useAppSelector } from './hooks/context';
+import { useAppDispatch, useAppSelector } from './store/app';
 import {
   filterModalClosed, filterModalOpened, selectUiState, UiState,
-} from './state/reducers/uiReducer';
+} from './store/reducers/uiReducer';
 import useQuery from './hooks/query';
-import { CreateListing } from './components/CreateListing';
+import { CreateListing } from './features/listings/CreateListing';
 import { guid } from './utilities/rand';
 
-const Home = lazy(() => import('./pages/Home'));
-const Favorites = lazy(() => import('./pages/Favorites'));
-const Account = lazy(() => import('./pages/Account'));
-const Settings = lazy(() => import('./pages/Settings'));
-const ListingDetail = lazy(() => import('./pages/ListingDetail'));
+const Home = lazy(() => import('./features/listings/routes/Listings'));
+const Favorites = lazy(() => import('./routes/Favorites'));
+const Account = lazy(() => import('./routes/Account'));
+const Settings = lazy(() => import('./routes/Settings'));
+const ListingDetail = lazy(() => import('./features/listings/routes/ListingDetail'));
 
 function App() {
   const dispatch = useAppDispatch();
@@ -52,15 +52,18 @@ function App() {
   };
 
   const handleDrawerToggle = () => {
+    mobileOpen && unlockScroll();
     setMobileOpen(!mobileOpen);
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    document.body.style.overflow = 'hidden';
   };
 
-  const handleClose = async () => {
+  const handleMenuClose = async () => {
     setAnchorEl(null);
+    unlockScroll();
   };
 
   const handleGoHome = () => {
@@ -98,6 +101,15 @@ function App() {
     setShowSidebar(location.pathname === '/');
   }, [location]);
 
+
+  // MUI is buggy and doens't unlock the scroll on menu close
+  // Do it manually here with timeout to ensure render cycle is complete
+  function unlockScroll() {
+    setTimeout(() => {
+      document.body.style.removeProperty('overflow');
+    }, 1);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box className="w-full h-screen">
@@ -133,8 +145,7 @@ function App() {
           className="p-0"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={handleClose}
-          onClick={handleClose}
+          onClick={handleMenuClose}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
           }}>

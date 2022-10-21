@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IRange, ISelect } from '../../data/interfaces/filter';
+import { IRange, ISelect } from './types/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
@@ -51,7 +51,6 @@ const filtersSlice = createSlice({
   initialState,
   reducers: {
     filtersUpdated: (state, action: PayloadAction<IFilter>) => {
-      console.log('filtersUpdated', action.payload);
       state.filters = action.payload;
     },
   },

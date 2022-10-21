@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { HasListing } from '../data/interfaces/props';
+import { HasListing } from '../../data/interfaces/props';
 
 export default function Listing({ listing }: HasListing) {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export default function Listing({ listing }: HasListing) {
         {listing.title}
       </Typography>
       <Typography className="text-zinc-500" variant="subtitle2">
-        {`$${(listing.price / 100).toFixed(2)}` + '/ day' }
+        {`$${(listing.price / 100).toFixed(2)}` + '/ day'}
       </Typography>
     </Box>
   );

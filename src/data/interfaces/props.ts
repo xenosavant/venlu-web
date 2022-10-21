@@ -1,4 +1,4 @@
-import { IListing } from './listing';
+import { IListing } from '../../features/listings/listing';
 
 export interface Closeable {
   onClose: () => void;

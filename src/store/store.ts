@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import filtersReducer from './reducers/filtersReducer';
-import listingReducer from './reducers/listingsReducer';
+import filtersReducer from '../features/filter/filtersReducer';
+import listingReducer from '../features/listings/listingsReducer';
 import uiReducer from './reducers/uiReducer';
 
 const store = configureStore({

@@ -1,12 +1,12 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
-import Listing from '../components/Listing';
-import { useAppDispatch, useAppSelector } from '../hooks/context';
-import { IFilter, getFilters } from '../state/reducers/filtersReducer';
+import { useAppDispatch, useAppSelector } from '../../../store/app';
+import { IFilter, getFilters } from '../../filter/filtersReducer';
 import {
   selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
-} from '../state/reducers/listingsReducer';
-import { selectUiState, UiState } from '../state/reducers/uiReducer';
+} from '../listingsReducer';
+import { selectUiState, UiState } from '../../../store/reducers/uiReducer';
+import Listing from '../listing';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -16,12 +16,10 @@ export default function Home() {
   const uiState = useAppSelector<UiState>(selectUiState);
 
   useEffect(() => {
-    console.log(filters);
     dispatch(fetchListings());
   }, []);
 
   useEffect(() => {
-    console.log(filters);
     if (!uiState.filterModalOpen) {
       dispatch(fetchListings(filters));
     }

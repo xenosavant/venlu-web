@@ -8,8 +8,8 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { useNavigate } from 'react-router-dom';
-import { createListingModalOpened } from '../state/reducers/uiReducer';
-import { useAppDispatch } from '../hooks/context';
+import { createListingModalOpened } from '../store/reducers/uiReducer';
+import { useAppDispatch } from '../store/app';
 import sleep from '../utilities/sleep';
 
 export default function Nav(props: { handleRoute: () => void }) {

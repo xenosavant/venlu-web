@@ -5,14 +5,14 @@ import {
 import { Box, Container } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import { createRef, RefObject, useCallback, useEffect, useState } from 'react';
-import { IListing } from '../data/interfaces/listing';
-import { HasListing } from '../data/interfaces/props';
-import { createListingModalClosed } from '../state/reducers/uiReducer';
-import { useAppDispatch } from '../hooks/context';
+import { HasListing } from '../../data/interfaces/props';
+import { createListingModalClosed } from '../../store/reducers/uiReducer';
+import { useAppDispatch } from '../../store/app';
 import Cropper from 'react-easy-crop';
-import { createImage, getCroppedImg } from '../utilities/image';
+import { createImage, getCroppedImg } from '../../utilities/image';
 import { Web3Storage } from 'web3.storage';
-import { guid } from '../utilities/rand';
+import { guid } from '../../utilities/rand';
+import { IListing } from './types/listing';
 
 const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
 

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { featureKeys, IListing } from '../../data/interfaces/listing';
-import { IRange, ISelect } from '../../data/interfaces/filter';
 import sleep from '../../utilities/sleep';
-import { IFilter } from './filtersReducer';
+import { IFilter } from '../filter/filtersReducer';
+import { IRange, ISelect } from '../filter/types/filter';
+import { IListing } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
@@ -48,12 +48,12 @@ const initialState: ListingState = {
 function filterData(data: IListing[], filters: IFilter): IListing[] {
   const selectFiltered = data.filter((item: IListing) => filters['select'].every(
     (filter: ISelect) => filter.selected?.every(
-      (selectedValue: string) => item.features[filter.key as featureKeys]?.includes(selectedValue),
+      (selectedValue: string) => item.features[filter.key]?.includes(selectedValue),
     ),
   ));
 
   const filtered = selectFiltered.filter((item: IListing) => filters['range'].every(
-    (filter: IRange) => item[filter.key as keyof IListing] as number
+    (filter: IRange) => item[filter.key] as number
       >= (filter.min)
       && item[filter.key as keyof IListing] as number
       <= (filter.max),
@@ -65,7 +65,7 @@ function calculateSelectFacets(filters: ISelect[], listings: IListing[]): IFacet
   return filters.map((filter: ISelect) => {
     const options = (filter.options || []).map((option) => {
       const count = listings.filter(
-        (listing: IListing) => listing.features[filter.key as featureKeys]?.includes(option.key),
+        (listing: IListing) => listing.features[filter.key]?.includes(option.key),
       ).length;
       return { key: option.key, count };
     });

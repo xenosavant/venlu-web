@@ -2,20 +2,18 @@ import {
   Box, Checkbox, debounce, FormControlLabel, FormGroup, FormLabel, Radio, Slider, Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  SelectType, IRange, ISelect,
-} from '../data/interfaces/filter';
-import { featureKeys, keyFacetMap } from '../data/interfaces/listing';
-import { useAppDispatch, useAppSelector } from '../hooks/context';
+import { useAppDispatch, useAppSelector } from '../../store/app';
 import {
   IFilter,
   filtersUpdated, getFilters,
-} from '../state/reducers/filtersReducer';
+} from './filtersReducer';
 import {
   CountFacet,
   fetchListingsCount, getFacets, IFacet, RangeFacet,
-} from '../state/reducers/listingsReducer';
-import clone from '../utilities/clone';
+} from '../listings/listingsReducer';
+import clone from '../../utilities/clone';
+import { KeyFacetMap } from './types/facets';
+import { IRange, ISelect } from './types/filter';
 
 export default function Filter({ showFacets }:
   { showFacets: boolean }) {
@@ -85,7 +83,7 @@ export default function Filter({ showFacets }:
     updateFilters(cloned);
   };
 
-  const selectMap = {
+  const SelectMap = {
     checkbox: <Checkbox />,
     radio: <Radio />,
   };
@@ -140,8 +138,8 @@ export default function Filter({ showFacets }:
                     <Box key={option.key} className="flex items-center">
                       <FormControlLabel
                         checked={filter.selected?.includes(option.key)}
-                        control={selectMap[filter.selectType]}
-                        label={keyFacetMap[filter.key][option.key]}
+                        control={SelectMap[filter.selectType]}
+                        label={KeyFacetMap[filter.key][option.key]}
                         onChange={() => {
                           handleSelectUpdated(filter.key, option.key);
                         }}
