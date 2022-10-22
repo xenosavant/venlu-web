@@ -12,7 +12,7 @@ import {
   fetchListingsCount, getFacets, IFacet, RangeFacet,
 } from '../listings/listingsReducer';
 import clone from '../../utilities/clone';
-import { IRange, ISelect } from './types/filter';
+import { IRange, ISelect, OptionKey } from './types/filter';
 
 export default function Filter({ showFacets }:
   { showFacets: boolean }) {
@@ -32,6 +32,7 @@ export default function Filter({ showFacets }:
   }, 1000), []);
 
   useEffect(() => {
+    console.log(filters)
     setCachedFilters(clone(filters));
   }, []);
 
@@ -49,7 +50,7 @@ export default function Filter({ showFacets }:
     return ((value / 100) * (sliderRange[1] - sliderRange[0])) + sliderRange[0];
   };
 
-  const handleSelectUpdated = (key: string, value: string) => {
+  const handleSelectUpdated = (key: string, value: OptionKey) => {
     const cloned = clone<IFilter>(cachedFilters);
     const filter = cloned.select.find((f) => f.key === key) as ISelect;
     if (filter.selected.includes(value)) {

@@ -12,7 +12,7 @@
             "price": "100",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -32,7 +32,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -52,7 +52,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -72,7 +72,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding"
                 ],
                 "coverage": [
@@ -91,7 +91,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -111,7 +111,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "bachelorette"
                 ],
                 "coverage": [
@@ -131,7 +131,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -151,7 +151,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception",
                     "bachelorette",
@@ -173,7 +173,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -193,7 +193,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -213,7 +213,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],
@@ -233,7 +233,7 @@
             "price": "10000",
             "duration": "hour",
             "features": {
-                "type": [
+                "event": [
                     "wedding",
                     "reception"
                 ],

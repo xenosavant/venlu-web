@@ -1,23 +1,20 @@
-import { ListingKeys } from "../../listings/types/listing";
-import { FeatureFacet, FeatureFacetKeys } from "./facets";
+import { AmenitiesOptions, CoverageOptions, FeatureKeys, FeatureTypes, ListingKeys, EventOptions } from "../../listings/types/listing";
 
 export interface IFilterBase {
     order: number;
     title: string;
 }
 
-export type FilterOptions = { key: string, value: string, count?: number }[];
-
 export type SelectType = 'checkbox' | 'radio';
 
 export interface ISelect extends IFilterBase {
-    key: FeatureFacetKeys;
+    key: FeatureKeys;
     selectType: SelectType;
     options: { key: OptionKey, value: string, count?: number }[],
-    selected: string[];
+    selected: OptionKey[];
 }
 
-type OptionKey = keyof FeatureFacet["type"] | keyof FeatureFacet["coverage"] | keyof FeatureFacet["amenities"];
+export type OptionKey = EventOptions | CoverageOptions | AmenitiesOptions;
 
 export interface IRange extends IFilterBase {
     key: ListingKeys;

@@ -1,25 +1,23 @@
-export type FeatureFacet = {
-    [T in FeatureFacetKeys]: KeyFacetMap[T];
-}
+import { Features, FeatureTypes } from "../../listings/types/listing"
 
-export type FeatureFacetKeys = 'type' | 'coverage' | 'amenities';
+export type FacetMap<T extends Features> = { [k in keyof T]: Record<T[k], string> };
 
-export type KeyFacetMap = {
-    type: {
-        'bachelor': 'Bachelor party',
-        'bachelorette': 'Bachelorette party',
-        'bridalShower': 'Bridal shower',
+export const FacetMapping: FacetMap<FeatureTypes> = {
+    event: {
         'wedding': 'Wedding',
         'reception': 'Reception',
+        'bridalShower': 'Bridal shower',
+        'bachelorette': 'Bachelorette party',
+        'bachelor': 'Bachelor party'
     },
     coverage: {
         'indoor': 'Indoor',
-        'outdoor': 'Outdoor',
+        'outdoor': 'Outdoor'
     },
     amenities: {
         'bar': 'Bar',
         'dancefloor': 'Dancefloor',
         'dj': 'DJ',
-        'catering': 'Catering',
+        'catering': 'Catering'
     }
 }

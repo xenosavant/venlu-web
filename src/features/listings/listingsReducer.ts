@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sleep from '../../utilities/sleep';
 import { IFilter } from '../filter/filtersReducer';
-import { IRange, ISelect } from '../filter/types/filter';
+import { IRange, ISelect, OptionKey } from '../filter/types/filter';
 import { IListing } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
@@ -48,7 +48,7 @@ const initialState: ListingState = {
 function filterData(data: IListing[], filters: IFilter): IListing[] {
   const selectFiltered = data.filter((item: IListing) => filters['select'].every(
     (filter: ISelect) => filter.selected?.every(
-      (selectedValue: string) => item.features[filter.key]?.includes(selectedValue),
+      (selectedValue: OptionKey) => item.features[filter.key]?.includes(selectedValue),
     ),
   ));
 

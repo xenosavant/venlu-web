@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FeatureFacetKeys, FeatureFacet } from './types/facets';
-import { IRange, ISelect } from './types/filter';
+import { CoverageOptions, EventOptions } from '../listings/types/listing';
+import { FacetMapping } from './types/facets';
+import { IRange, ISelect, OptionKey } from './types/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
@@ -28,11 +29,10 @@ const initialState: FilterState = {
       {
         selectType: 'checkbox',
         order: 2,
-        key: 'type',
+        key: 'event',
         title: 'Event type',
-        options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
-        { key: 'bridalShower', value: 'Bridal shower' }, { key: 'bachelorette', value: 'Bachelorette party' },
-        { key: 'bachelor', value: 'Bachelor party' }],
+        options: Object.entries(FacetMapping['event']).map((key) =>
+          ({ key: key[0] as OptionKey, value: key[1] })),
         selected: [],
       },
       {
@@ -40,7 +40,8 @@ const initialState: FilterState = {
         order: 3,
         key: 'coverage',
         title: 'Space',
-        options: [{ key: 'indoor', value: 'Indoor' }, { key: 'outdoor', value: 'Outdoor' }],
+        options: Object.entries(FacetMapping['coverage']).map((key) =>
+          ({ key: key[0] as OptionKey, value: key[1] })),
         selected: [],
       },
     ],

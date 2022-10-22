@@ -54,6 +54,7 @@ function App() {
   const handleDrawerToggle = () => {
     mobileOpen && unlockScroll();
     setMobileOpen(!mobileOpen);
+    setAnchorEl(null);
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -62,7 +63,6 @@ function App() {
   };
 
   const handleMenuClose = async () => {
-    setAnchorEl(null);
     unlockScroll();
   };
 
@@ -145,7 +145,6 @@ function App() {
           className="p-0"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClick={handleMenuClose}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
           }}>
@@ -224,7 +223,7 @@ function App() {
                   capacity: 0,
                   parkingCapacity: 0,
                   features: {
-                    type: [],
+                    event: [],
                     amenities: [],
                     coverage: [],
                   }
