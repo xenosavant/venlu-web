@@ -12,7 +12,6 @@ import {
   fetchListingsCount, getFacets, IFacet, RangeFacet,
 } from '../listings/listingsReducer';
 import clone from '../../utilities/clone';
-import { KeyFacetMap } from './types/facets';
 import { IRange, ISelect } from './types/filter';
 
 export default function Filter({ showFacets }:
@@ -139,7 +138,7 @@ export default function Filter({ showFacets }:
                       <FormControlLabel
                         checked={filter.selected?.includes(option.key)}
                         control={SelectMap[filter.selectType]}
-                        label={KeyFacetMap[filter.key][option.key]}
+                        label={filters.select.find(s => s.key === filter.key)?.options.find((o) => o.key == option.key)?.value}
                         onChange={() => {
                           handleSelectUpdated(filter.key, option.key);
                         }}

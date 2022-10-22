@@ -50,6 +50,6 @@ export default function FilterModal({ onClose }: Closeable) {
   const content = <Filter showFacets={false} />;
 
   return (
-    <Modal onClose={handleCancel} actions={actions} content={content} title="Fiters" />
+    <Modal onClose={handleCancel} actions={actions} content={content} title="Filters" />
   );
 }

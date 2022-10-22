@@ -1,14 +1,14 @@
 export type FeatureFacet = {
-    [key: string]: string;
+    [T in FeatureFacetKeys]: KeyFacetMap[T];
 }
 
-export type FeatureFacetKeys = keyof FeatureFacet;
+export type FeatureFacetKeys = 'type' | 'coverage' | 'amenities';
 
-export const KeyFacetMap: Record<string, FeatureFacet> = {
+export type KeyFacetMap = {
     type: {
         'bachelor': 'Bachelor party',
         'bachelorette': 'Bachelorette party',
-        'bridal-shower': 'Bridal shower',
+        'bridalShower': 'Bridal shower',
         'wedding': 'Wedding',
         'reception': 'Reception',
     },

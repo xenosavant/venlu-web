@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FeatureFacetKeys, FeatureFacet } from './types/facets';
 import { IRange, ISelect } from './types/filter';
 
 export type FilterType = 'checkbox' | 'radio';
@@ -30,7 +31,7 @@ const initialState: FilterState = {
         key: 'type',
         title: 'Event type',
         options: [{ key: 'wedding', value: 'Wedding' }, { key: 'reception', value: 'Reception' },
-        { key: 'bridal-shower', value: 'Bridal shower' }, { key: 'bachelorette', value: 'Bachelorette party' },
+        { key: 'bridalShower', value: 'Bridal shower' }, { key: 'bachelorette', value: 'Bachelorette party' },
         { key: 'bachelor', value: 'Bachelor party' }],
         selected: [],
       },
