@@ -55,14 +55,16 @@ function App() {
     mobileOpen && unlockScroll();
     setMobileOpen(!mobileOpen);
     setAnchorEl(null);
+    unlockScroll();
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    document.body.style.overflow = 'hidden';
+    lockScroll();
   };
 
   const handleMenuClose = async () => {
+    setAnchorEl(null);
     unlockScroll();
   };
 
@@ -101,12 +103,27 @@ function App() {
     setShowSidebar(location.pathname === '/');
   }, [location]);
 
+  useEffect(() => {
+    console.log('uiState', uiState);
+    if (uiState.createListingModalOpen) {
+      lockScroll();
+    } else {
+      unlockScroll();
+    }
+  }, [uiState]);
+
 
   // MUI is buggy and doens't unlock the scroll on menu close
   // Do it manually here with timeout to ensure render cycle is complete
   function unlockScroll() {
     setTimeout(() => {
       document.body.style.removeProperty('overflow');
+    }, 1);
+  }
+
+  function lockScroll() {
+    setTimeout(() => {
+      document.body.style.overflow = 'hidden';
     }, 1);
   }
 
@@ -145,6 +162,7 @@ function App() {
           className="p-0"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
           }}>

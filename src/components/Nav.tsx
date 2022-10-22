@@ -10,7 +10,6 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import { useNavigate } from 'react-router-dom';
 import { createListingModalOpened } from '../store/reducers/uiReducer';
 import { useAppDispatch } from '../store/app';
-import sleep from '../utilities/sleep';
 
 export default function Nav(props: { handleRoute: () => void }) {
   const navigate = useNavigate();
