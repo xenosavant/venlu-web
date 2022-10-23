@@ -7,14 +7,16 @@ export interface IFilterBase {
 
 export type SelectType = 'checkbox' | 'radio';
 
+export type OptionKeys = EventOptions | CoverageOptions | AmenitiesOptions;
+
+export type SelectOption = { key: OptionKeys, value: string, count?: number };
+
 export interface ISelect extends IFilterBase {
     key: FeatureKeys;
     selectType: SelectType;
-    options: { key: OptionKey, value: string, count?: number }[],
-    selected: OptionKey[];
+    options: SelectOption[];
+    selected: OptionKeys[];
 }
-
-export type OptionKey = EventOptions | CoverageOptions | AmenitiesOptions;
 
 export interface IRange extends IFilterBase {
     key: ListingKeys;

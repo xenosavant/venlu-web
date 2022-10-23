@@ -7,24 +7,29 @@ export interface IListing {
   parkingCapacity: number;
   primaryImageIndex: number;
   price: number;
-  features: Partial<ListingFeatures<FeatureTypes>>;
+  features: ListingFeatures;
 }
 
-type ListingFeatures<T> = { [k in keyof T]: T[k][] }
-
-export type FeatureKeys = keyof FeatureTypes;
-export type ListingKeys = keyof IListing;
+export type ListingFeatures = {
+  event: EventOptions[];
+  coverage: CoverageOptions[];
+  amenities: AmenitiesOptions[];
+}
 
 export type FeatureTypes = {
-  event: EventOptions;
-  coverage: CoverageOptions;
-  amenities: AmenitiesOptions;
+  [k in keyof ListingFeatures]: GetElementType<ListingFeatures[k]>
 }
 
 export type Features = {
-  [key: string]: EventOptions | CoverageOptions | AmenitiesOptions;
+  [key: string]: Options;
 }
 
 export type EventOptions = 'bachelor' | 'bachelorette' | 'bridalShower' | 'wedding' | 'reception';
 export type CoverageOptions = 'indoor' | 'outdoor';
 export type AmenitiesOptions = 'bar' | 'dancefloor' | 'dj' | 'catering';
+export type Options = EventOptions | CoverageOptions | AmenitiesOptions;
+
+export type FeatureKeys = keyof FeatureTypes;
+export type ListingKeys = keyof IListing;
+
+export type GetElementType<T extends any[]> = T extends (infer U)[] ? U : never;

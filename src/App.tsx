@@ -19,7 +19,7 @@ import {
   filterModalClosed, filterModalOpened, selectUiState, UiState,
 } from './store/reducers/uiReducer';
 import useQuery from './hooks/query';
-import { CreateListing } from './features/listings/CreateListing';
+import { CreateListing } from './features/listings/routes/CreateListing';
 import { guid } from './utilities/rand';
 
 const Home = lazy(() => import('./features/listings/routes/Listings'));

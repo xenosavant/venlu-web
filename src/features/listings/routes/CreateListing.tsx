@@ -1,30 +1,33 @@
 import {
   Button,
+  Chip,
   FormGroup, FormLabel, IconButton, InputAdornment, OutlinedInput, TextField, Typography,
 } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import { createRef, RefObject, useCallback, useEffect, useState } from 'react';
-import { HasListing } from '../../data/interfaces/props';
-import { createListingModalClosed } from '../../store/reducers/uiReducer';
-import { useAppDispatch } from '../../store/app';
+import { HasListing } from '../../../data/interfaces/props';
+import { createListingModalClosed } from '../../../store/reducers/uiReducer';
+import { useAppDispatch } from '../../../store/app';
 import Cropper from 'react-easy-crop';
-import { createImage, getCroppedImg } from '../../utilities/image';
+import { createImage, getCroppedImg } from '../../../utilities/image';
 import { Web3Storage } from 'web3.storage';
-import { guid } from '../../utilities/rand';
-import { IListing } from './types/listing';
+import { guid } from '../../../utilities/rand';
+import { AmenitiesOptions, CoverageOptions, EventOptions, FeatureKeys, FeatureTypes, IListing, ListingFeatures, Options } from '../types/listing';
+import { FacetMap, FacetMapping } from '../../filter/types/facets';
+import clone from '../../../utilities/clone';
 
 const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
 
 export function CreateListing({ listing }: HasListing) {
-  const [listingState, setlistingState] = useState<Partial<IListing>>(listing);
+  const [listingState, setlistingState] = useState<IListing>(listing);
   const [input, setInput] = useState<RefObject<any>>(createRef());
   const [zoom, setZoom] = useState(1)
   const [currentImage, setCurrentImage] = useState<string>();
   const [step, setStep] = useState(0);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [showCropper, setShowCropper] = useState(false);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const dispatch = useAppDispatch();
 
   const titleMap: Map<number, string> = new Map([
@@ -36,6 +39,12 @@ export function CreateListing({ listing }: HasListing) {
   const setProperty = (prop: keyof IListing) => (e: any) => {
     setlistingState({ ...listing, [prop]: e.target.value });
   };
+
+  const handleToggleFacet = (feature: FeatureKeys, facetKey: Options) => (e: any) => {
+    let cloned = clone<{ [k in keyof FeatureTypes]: Options[] }>(listingState.features);
+    cloned[feature].some(k => k === facetKey) ? cloned[feature] = cloned[feature].filter(k => k !== facetKey) : cloned[feature].push(facetKey);
+    setlistingState({ ...listingState, features: cloned as ListingFeatures });
+  }
 
   const uploadPhoto = async (e: any) => {
     const file = e.target.files[0];
@@ -59,7 +68,6 @@ export function CreateListing({ listing }: HasListing) {
       setShowCropper(true);
     }
   }
-
 
   const clickUpload = () => {
     input.current.click();
@@ -89,9 +97,27 @@ export function CreateListing({ listing }: HasListing) {
     </FormGroup>
   </Box>
 
+  // fixthis
   const features =
     <>
-      features
+      {Object.entries(FacetMapping).map(([feature, value]) => {
+        return (
+          <FormGroup key={feature}>
+            <FormLabel className="mb-16">{value[0]}</FormLabel>
+            <Box className="flex flex-wrap mb-8">
+              {
+                Object.entries(value[1]).map(([key, value]) =>
+                  <Chip
+                    className='mr-8'
+                    key={key}
+                    label={value}
+                    variant={listingState.features[feature as keyof FeatureTypes].some(k => k === key) ? 'filled' : 'outlined'}
+                    onClick={handleToggleFacet(feature as keyof FeatureTypes, key as Options)}
+                  />
+                )}
+            </Box>
+          </FormGroup>)
+      })}
     </>
 
   const PhotoUpload =
