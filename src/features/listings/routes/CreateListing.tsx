@@ -6,16 +6,16 @@ import {
 import { Box, Container } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import { createRef, RefObject, useCallback, useEffect, useState } from 'react';
-import { HasListing } from '../../../data/interfaces/props';
-import { createListingModalClosed } from '../../../store/reducers/uiReducer';
-import { useAppDispatch } from '../../../store/app';
+import { HasListing } from '@data/interfaces/props';
+import { createListingModalClosed } from '@store/reducers/uiReducer';
+import { useAppDispatch } from '@store/app';
 import Cropper from 'react-easy-crop';
-import { createImage, getCroppedImg } from '../../../utilities/image';
+import { createImage, getCroppedImg } from '@utilities/image';
 import { Web3Storage } from 'web3.storage';
-import { guid } from '../../../utilities/rand';
-import { AmenitiesOptions, CoverageOptions, EventOptions, FeatureKeys, FeatureTypes, IListing, ListingFeatures, Options } from '../types/listing';
-import { FacetMap, FacetMapping } from '../../filter/types/facets';
-import clone from '../../../utilities/clone';
+import { guid } from '@utilities/rand';
+import { FeatureKeys, FeatureTypes, IListing, ListingFeatures, Options } from '../types/listing';
+import { FacetMap, FacetMapping } from '@filter/types/facets';
+import clone from '@utilities/clone';
 
 const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
 

@@ -1,10 +1,10 @@
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Closeable } from '../../data/interfaces/props';
-import { useAppDispatch, useAppSelector } from '../../store/app';
-import { IFilter, filtersUpdated, getFilters } from '../../features/filter/filtersReducer';
-import { fetchListings, fetchListingsCount, getFilteredCount } from '../../features/listings/listingsReducer';
-import Filter from '../../features/filter/Filter';
+import { useAppDispatch, useAppSelector } from '@store/app';
+import { IFilter, filtersUpdated, getFilters } from '@filter/filtersReducer';
+import { fetchListings, fetchListingsCount, getFilteredCount } from '@listings/listingsReducer';
+import Filter from '@filter/Filter';
 import { Modal } from '../Modal';
 
 export default function FilterModal({ onClose }: Closeable) {

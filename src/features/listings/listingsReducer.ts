@@ -3,8 +3,8 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sleep from '../../utilities/sleep';
 import { IFilter } from '../filter/filtersReducer';
-import { IRange, ISelect, OptionKey } from '../filter/types/filter';
-import { IListing } from './types/listing';
+import { IRange, ISelect } from '../filter/types/filter';
+import { Features, IListing, Options, UntypedFeatures } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
@@ -48,7 +48,7 @@ const initialState: ListingState = {
 function filterData(data: IListing[], filters: IFilter): IListing[] {
   const selectFiltered = data.filter((item: IListing) => filters['select'].every(
     (filter: ISelect) => filter.selected?.every(
-      (selectedValue: OptionKey) => item.features[filter.key]?.includes(selectedValue),
+      (selectedValue: Options) => ((item.features as UntypedFeatures)[filter.key]).includes(selectedValue),
     ),
   ));
 
@@ -65,7 +65,7 @@ function calculateSelectFacets(filters: ISelect[], listings: IListing[]): IFacet
   return filters.map((filter: ISelect) => {
     const options = (filter.options || []).map((option) => {
       const count = listings.filter(
-        (listing: IListing) => listing.features[filter.key]?.includes(option.key),
+        (listing: IListing) => (listing.features as UntypedFeatures)[filter.key].includes(option.key),
       ).length;
       return { key: option.key, count };
     });

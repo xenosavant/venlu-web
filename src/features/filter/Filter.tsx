@@ -2,7 +2,7 @@ import {
   Box, Checkbox, debounce, FormControlLabel, FormGroup, FormLabel, Radio, Slider, Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/app';
+import { useAppDispatch, useAppSelector } from '@store/app';
 import {
   IFilter,
   filtersUpdated, getFilters,
@@ -10,9 +10,10 @@ import {
 import {
   CountFacet,
   fetchListingsCount, getFacets, IFacet, RangeFacet,
-} from '../listings/listingsReducer';
-import clone from '../../utilities/clone';
-import { IRange, ISelect, OptionKeys } from './types/filter';
+} from '@listings/listingsReducer';
+import clone from '@utilities/clone';
+import { IRange, ISelect } from './types/filter';
+import { Options } from '@listings/types/listing';
 
 export default function Filter({ showFacets }:
   { showFacets: boolean }) {
@@ -50,7 +51,7 @@ export default function Filter({ showFacets }:
     return ((value / 100) * (sliderRange[1] - sliderRange[0])) + sliderRange[0];
   };
 
-  const handleSelectUpdated = (key: string, value: OptionKeys) => {
+  const handleSelectUpdated = (key: string, value: Options) => {
     const cloned = clone<IFilter>(cachedFilters);
     const filter = cloned.select.find((f) => f.key === key) as ISelect;
     if (filter.selected.includes(value)) {

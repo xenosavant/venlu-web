@@ -1,4 +1,4 @@
-import { Features, FeatureTypes } from "../../listings/types/listing"
+import { Features, FeatureTypes } from "@listings/types/listing"
 
 // Generic mapped type to type the facet map
 export type FacetMap<T extends Features> = { [k in keyof T]: [string, Record<T[k], string>] };

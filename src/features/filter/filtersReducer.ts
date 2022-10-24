@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FeatureTypes } from '../listings/types/listing';
+import { FeatureTypes, Options } from '@listings/types/listing';
 import { FacetMapping } from './types/facets';
-import { IRange, ISelect, OptionKeys, SelectType } from './types/filter';
+import { IRange, ISelect, SelectType } from './types/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
@@ -40,7 +40,7 @@ function createFilter(key: keyof FeatureTypes, order: number, selectType: Select
     key: key,
     title: FacetMapping[key][0],
     options: Object.entries(FacetMapping[key][1]).map((key) =>
-      ({ key: key[0] as OptionKeys, value: key[1] as string })),
+      ({ key: key[0] as Options, value: key[1] as string })),
     selected: [],
   }
 }

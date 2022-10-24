@@ -27,11 +27,14 @@ export type Features = {
   [key: string]: Options
 }
 
+export type UntypedFeatures = {
+  [k in FeatureKeys]: Options[]
+}
+
 export type EventOptions = 'bachelor' | 'bachelorette' | 'bridalShower' | 'wedding' | 'reception';
 export type CoverageOptions = 'indoor' | 'outdoor';
 export type AmenitiesOptions = 'bar' | 'dancefloor' | 'dj' | 'catering';
-export type ExampleType = 'example1' | 'example2';
-export type Options = EventOptions | CoverageOptions | AmenitiesOptions | ExampleType;
+export type Options = EventOptions | CoverageOptions | AmenitiesOptions;
 
 export type FeatureKeys = keyof FeatureTypes;
 export type ListingKeys = keyof IListing;

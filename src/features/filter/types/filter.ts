@@ -1,4 +1,4 @@
-import { AmenitiesOptions, CoverageOptions, FeatureKeys, FeatureTypes, ListingKeys, EventOptions } from "../../listings/types/listing";
+import { FeatureKeys, ListingKeys, Options } from "@listings/types/listing";
 
 export interface IFilterBase {
     order: number;
@@ -7,15 +7,13 @@ export interface IFilterBase {
 
 export type SelectType = 'checkbox' | 'radio';
 
-export type OptionKeys = EventOptions | CoverageOptions | AmenitiesOptions;
-
-export type SelectOption = { key: OptionKeys, value: string, count?: number };
+export type SelectOption = { key: Options, value: string, count?: number };
 
 export interface ISelect extends IFilterBase {
     key: FeatureKeys;
     selectType: SelectType;
     options: SelectOption[];
-    selected: OptionKeys[];
+    selected: Options[];
 }
 
 export interface IRange extends IFilterBase {

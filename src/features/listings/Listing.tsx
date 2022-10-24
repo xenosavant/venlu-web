@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { HasListing } from '../../data/interfaces/props';
+import { HasListing } from '@data/interfaces/props';
 
 export default function Listing({ listing }: HasListing) {
   const navigate = useNavigate();

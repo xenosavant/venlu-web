@@ -2,7 +2,7 @@ import { Box, Container } from '@mui/system';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
-import { useGet } from '../../../hooks/api';
+import { useGet } from '@hooks/api';
 import { IListing } from '../types/listing';
 
 export default function ListingDetail() {
