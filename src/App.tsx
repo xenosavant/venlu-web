@@ -243,7 +243,7 @@ function App() {
                   features: {
                     event: [],
                     amenities: [],
-                    coverage: [],
+                    coverage: []
                   }
                 }}></CreateListing>
             </>

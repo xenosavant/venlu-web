@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FeatureTypes } from '../listings/types/listing';
 import { FacetMapping } from './types/facets';
-import { IRange, ISelect, OptionKeys } from './types/filter';
+import { IRange, ISelect, OptionKeys, SelectType } from './types/filter';
 
 export type FilterType = 'checkbox' | 'radio';
 
@@ -25,32 +26,24 @@ const initialState: FilterState = {
       }
     ],
     select: [
-      {
-        selectType: 'checkbox',
-        order: 2,
-        key: 'event',
-        title: FacetMapping['event'][0],
-        options: Object.entries(FacetMapping['event'][1]).map((key) =>
-          ({ key: key[0] as OptionKeys, value: key[1] })),
-        selected: [],
-      },
-      {
-        selectType: 'checkbox',
-        order: 3,
-        key: 'coverage',
-        title: FacetMapping['coverage'][0],
-        options: Object.entries(FacetMapping['coverage'][1]).map((key) =>
-          ({ key: key[0] as OptionKeys, value: key[1] })),
-        selected: [],
-      },
+      createFilter('event', 1, 'checkbox'),
+      createFilter('coverage', 2, 'checkbox'),
+      createFilter('amenities', 3, 'checkbox'),
     ],
   }
 };
 
-const a = FacetMapping['event'][0];
-
-// factory to build the facet option arrays
-/// getOptions<> = (key: keyof FeatureTypes) => {
+function createFilter(key: keyof FeatureTypes, order: number, selectType: SelectType): ISelect {
+  return {
+    selectType: selectType,
+    order: order,
+    key: key,
+    title: FacetMapping[key][0],
+    options: Object.entries(FacetMapping[key][1]).map((key) =>
+      ({ key: key[0] as OptionKeys, value: key[1] as string })),
+    selected: [],
+  }
+}
 
 
 

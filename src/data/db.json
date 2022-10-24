@@ -18,6 +18,13 @@
                 ],
                 "coverage": [
                     "indoor"
+                ],
+                "amenities": [
+                    "bar"
+                ],
+                "example": [
+                    "example1",
+                    "example2"
                 ]
             }
         },

@@ -77,33 +77,33 @@ export function CreateListing({ listing }: HasListing) {
     setCroppedAreaPixels(croppedAreaPixels);
   }, [])
 
-  const BasicInfo = <Box>
-    <FormGroup className="mb-32 mt-16">
-      <FormLabel className="mb-16">Name</FormLabel>
-      <TextField onChange={setProperty('title')} value={listingState.title} />
-    </FormGroup>
-    <FormGroup className="mb-32 mt-16">
-      <FormLabel className="mb-16">Description</FormLabel>
-      <TextField onChange={setProperty('description')} multiline value={listingState.description} />
-    </FormGroup>
-    <FormGroup className="mb-32 mt-16">
-      <FormLabel className="mb-16">Price</FormLabel>
-      <OutlinedInput
-        inputProps={{ inputMode: 'numeric', pattern: '[0-9]?.[0-9]*' }}
-        onChange={setProperty('price')}
-        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-        value={listingState.price}
-      />
-    </FormGroup>
-  </Box>
+  const BasicInfo =
+    <Box>
+      <FormGroup className="mb-32 mt-16">
+        <FormLabel className="mb-16">Name</FormLabel>
+        <TextField onChange={setProperty('title')} value={listingState.title} />
+      </FormGroup>
+      <FormGroup className="mb-32 mt-16">
+        <FormLabel className="mb-16">Description</FormLabel>
+        <TextField onChange={setProperty('description')} multiline value={listingState.description} />
+      </FormGroup>
+      <FormGroup className="mb-32 mt-16">
+        <FormLabel className="mb-16">Price</FormLabel>
+        <OutlinedInput
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]?.[0-9]*' }}
+          onChange={setProperty('price')}
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          value={listingState.price}
+        />
+      </FormGroup>
+    </Box>
 
-  // fixthis
   const features =
-    <>
+    <Box className="mt-24">
       {Object.entries(FacetMapping).map(([feature, value]) => {
         return (
-          <FormGroup key={feature}>
-            <FormLabel className="mb-16">{value[0]}</FormLabel>
+          <FormGroup className="mb-16" key={feature}>
+            <FormLabel className="mb-12">{value[0]}</FormLabel>
             <Box className="flex flex-wrap mb-8">
               {
                 Object.entries(value[1]).map(([key, value]) =>
@@ -118,7 +118,7 @@ export function CreateListing({ listing }: HasListing) {
             </Box>
           </FormGroup>)
       })}
-    </>
+    </Box>
 
   const PhotoUpload =
     <>
