@@ -1,12 +1,12 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../store/app';
-import { IFilter, getFilters } from '../../filter/filtersReducer';
+import { useAppDispatch, useAppSelector } from '@store/app';
+import { IFilter, getFilters } from '@filter/filtersReducer';
 import {
   selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
 } from '../listingsReducer';
-import { selectUiState, UiState } from '../../../store/reducers/uiReducer';
-import Listing from '../listing';
+import { selectUiState, UiState } from '@store/reducers/uiReducer';
+import Listing from '@listings/Listing';
 
 export default function Home() {
   const dispatch = useAppDispatch();

@@ -27,6 +27,7 @@ export type Features = {
   [key: string]: Options
 }
 
+// Looser typing for casting when filtering
 export type UntypedFeatures = {
   [k in FeatureKeys]: Options[]
 }
