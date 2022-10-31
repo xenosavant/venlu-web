@@ -34,6 +34,9 @@
         "hooks/*"
       ],
       "@store*": [
+        "store*"
+      ],
+      "@store/*": [
         "store/*"
       ],
       "@data*": [

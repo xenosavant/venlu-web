@@ -1,10 +1,9 @@
-import { Features, FeatureTypes } from "@listings/types/listing"
+import { ListingFeatureTypes } from "@listings/types/listing"
 
-// Generic mapped type to type the facet map
-export type FacetMap<T extends Features> = { [k in keyof T]: [string, Record<T[k], string>] };
+export type FacetMapType = { [k in keyof ListingFeatureTypes]: [string, Record<ListingFeatureTypes[k], string>] };
 
 // Conrete facet map strictly typed by the listing features
-export const FacetMapping: FacetMap<FeatureTypes> = {
+export const FacetMapping: FacetMapType = {
     event: ['Event type', {
         'wedding': 'Wedding',
         'reception': 'Reception',

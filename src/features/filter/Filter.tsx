@@ -2,7 +2,7 @@ import {
   Box, Checkbox, debounce, FormControlLabel, FormGroup, FormLabel, Radio, Slider, Typography,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@store/app';
+import { useAppDispatch, useAppSelector } from '../../store/app';
 import {
   IFilter,
   filtersUpdated, getFilters,

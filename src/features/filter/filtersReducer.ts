@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FeatureTypes, Options } from '@listings/types/listing';
+import { FeatureKeys, Options } from '@listings/types/listing';
 import { FacetMapping } from './types/facets';
 import { IRange, ISelect, SelectType } from './types/filter';
 
@@ -33,7 +33,7 @@ const initialState: FilterState = {
   }
 };
 
-function createFilter(key: keyof FeatureTypes, order: number, selectType: SelectType): ISelect {
+function createFilter<T extends FeatureKeys>(key: T, order: number, selectType: SelectType): ISelect {
   return {
     selectType: selectType,
     order: order,

@@ -5,16 +5,16 @@ import {
 } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
-import { createRef, RefObject, useCallback, useEffect, useState } from 'react';
+import { createRef, RefObject, useCallback, useState } from 'react';
 import { HasListing } from '@data/interfaces/props';
 import { createListingModalClosed } from '@store/reducers/uiReducer';
-import { useAppDispatch } from '@store/app';
+import { useAppDispatch } from '@store/app'
 import Cropper from 'react-easy-crop';
 import { createImage, getCroppedImg } from '@utilities/image';
 import { Web3Storage } from 'web3.storage';
 import { guid } from '@utilities/rand';
-import { FeatureKeys, FeatureTypes, IListing, ListingFeatures, Options } from '../types/listing';
-import { FacetMap, FacetMapping } from '@filter/types/facets';
+import { FeatureKeys, IListing, ListingFeatureFacets, ListingFeatureTypes, Options } from '../types/listing';
+import { FacetMapping } from '@filter/types/facets';
 import clone from '@utilities/clone';
 
 const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
@@ -41,9 +41,9 @@ export function CreateListing({ listing }: HasListing) {
   };
 
   const handleToggleFacet = (feature: FeatureKeys, facetKey: Options) => (e: any) => {
-    let cloned = clone<{ [k in keyof FeatureTypes]: Options[] }>(listingState.features);
+    let cloned = clone<{ [k in keyof ListingFeatureTypes]: Options[] }>(listingState.features);
     cloned[feature].some(k => k === facetKey) ? cloned[feature] = cloned[feature].filter(k => k !== facetKey) : cloned[feature].push(facetKey);
-    setlistingState({ ...listingState, features: cloned as ListingFeatures });
+    setlistingState({ ...listingState, features: cloned as ListingFeatureFacets });
   }
 
   const uploadPhoto = async (e: any) => {
@@ -111,8 +111,8 @@ export function CreateListing({ listing }: HasListing) {
                     className='mr-8'
                     key={key}
                     label={value}
-                    variant={listingState.features[feature as keyof FeatureTypes].some(k => k === key) ? 'filled' : 'outlined'}
-                    onClick={handleToggleFacet(feature as keyof FeatureTypes, key as Options)}
+                    variant={listingState.features[feature as FeatureKeys].some(k => k === key) ? 'filled' : 'outlined'}
+                    onClick={handleToggleFacet(feature as FeatureKeys, key as Options)}
                   />
                 )}
             </Box>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import sleep from '../../utilities/sleep';
 import { IFilter } from '../filter/filtersReducer';
 import { IRange, ISelect } from '../filter/types/filter';
-import { Features, IListing, Options, UntypedFeatures } from './types/listing';
+import { IListing, Options, UntypedFeatures } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
