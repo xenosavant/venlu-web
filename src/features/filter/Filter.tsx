@@ -33,7 +33,6 @@ export default function Filter({ showFacets }:
   }, 1000), []);
 
   useEffect(() => {
-    console.log(filters)
     setCachedFilters(clone(filters));
   }, []);
 
@@ -56,7 +55,7 @@ export default function Filter({ showFacets }:
     const filter = cloned.select.find((f) => f.key === key) as ISelect;
     if (filter.selected.includes(value)) {
       filter.selected = filter.selected.filter(
-        (selected: string) => selected !== value,
+        (selected: any) => selected !== value,
       );
     } else {
       filter.selected?.push(value);

@@ -48,7 +48,7 @@ const initialState: ListingState = {
 function filterData(data: IListing[], filters: IFilter): IListing[] {
   const selectFiltered = data.filter((item: IListing) => filters['select'].every(
     (filter: ISelect) => filter.selected?.every(
-      (selectedValue: Options) => ((item.features as UntypedFeatures)[filter.key]).includes(selectedValue),
+      (selectedValue: Options) => ((item.features as UntypedFeatures)[filter.key])?.includes(selectedValue),
     ),
   ));
 
@@ -65,9 +65,9 @@ function calculateSelectFacets(filters: ISelect[], listings: IListing[]): IFacet
   return filters.map((filter: ISelect) => {
     const options = (filter.options || []).map((option) => {
       const count = listings.filter(
-        (listing: IListing) => (listing.features as UntypedFeatures)[filter.key].includes(option.key),
+        (listing: IListing) => (listing.features as UntypedFeatures)[filter.key]?.includes(option.key),
       ).length;
-      return { key: option.key, count };
+      return { key: option.key as string, count };
     });
     return [...options];
   }).reduce((acc, curr) => [...acc, ...curr], []);

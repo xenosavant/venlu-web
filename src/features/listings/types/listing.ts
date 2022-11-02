@@ -12,9 +12,9 @@ export interface IListing {
 
 // type for the listing features
 export interface ListingFeatureTypes {
-  event: EventOptions
-  coverage: CoverageOptions
-  amenities: AmenitiesOptions
+  event?: EventOptions
+  coverage?: CoverageOptions
+  amenities?: AmenitiesOptions
 }
 
 

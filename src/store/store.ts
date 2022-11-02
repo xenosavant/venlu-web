@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import filtersReducer from '../features/filter/filtersReducer';
 import listingReducer from '../features/listings/listingsReducer';
+
 import uiReducer from './reducers/uiReducer';
 
 const store = configureStore({
@@ -9,6 +10,7 @@ const store = configureStore({
     filter: filtersReducer,
     ui: uiReducer,
   },
+  devTools: true
 });
 
 export type RootState = ReturnType<typeof store.getState>;
