@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FeatureKeys, Options } from "@listings/types/listing";
+import { FeatureKeys, ListingFeatureNumberKeys, ListingFeatureOptionKeys, Options } from "@listings/types/listing";
 import { FacetMapping } from "./types/facets";
 import { IRange, ISelect, SelectType } from "./types/filter";
+import {GetFeatureType} from "@listings/types/listing";
 
 export type FilterType = "checkbox" | "radio";
 
@@ -17,39 +18,48 @@ export interface FilterState {
 const initialState: FilterState = {
   filters: {
     range: [
-      {
-        order: 1,
-        key: "price",
-        title: "Price range",
-        min: 0,
-        max: 1000000,
-      },
+      createRangeFilter("price", 1),
     ],
     select: [
-      createFilter("event", 1, "checkbox"),
-      createFilter("coverage", 2, "checkbox"),
-      createFilter("amenities", 3, "checkbox"),
+      createSelectFilter("event", 1, "checkbox"),
+      createSelectFilter("coverage", 2, "checkbox"),
+      createSelectFilter("amenities", 3, "checkbox"),
     ],
   },
 };
 
-function createFilter<T extends FeatureKeys>(
+function createSelectFilter<T extends ListingFeatureOptionKeys>(
   key: T,
   order: number,
   selectType: SelectType
 ): ISelect {
-  return {
-    selectType: selectType,
-    order: order,
-    key: key,
-    title: FacetMapping[key][0],
-    options: Object.entries(FacetMapping[key][1]).map((key) => ({
-      key: key[0],
-      value: key[1] as string,
-    })),
-    selected: [],
-  };
+    return {
+      selectType: selectType,
+      order: order,
+      key: key,
+      title: FacetMapping[key][0],
+      options: Object.entries(FacetMapping[key][1]).map((key) => ({
+        key: key[0] as Options,
+        value: key[1] as string,
+      })),
+      selected: [],
+    };
 }
+
+function createRangeFilter<T extends ListingFeatureNumberKeys>(
+  key: T,
+  order: number,
+): IRange {
+  const range = FacetMapping[key][1] as [number, number];
+    return {
+      order: order,
+      key: key,
+      title: FacetMapping[key][0],
+      min: range[0],
+      max: range[1],
+    };
+}
+
 
 const filtersSlice = createSlice({
   name: "filters",

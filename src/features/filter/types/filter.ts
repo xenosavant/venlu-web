@@ -1,4 +1,4 @@
-import { FeatureKeys, ListingKeys, Options } from "@listings/types/listing";
+import { FeatureKeys, Options } from "@listings/types/listing";
 
 export interface IFilterBase {
     order: number;
@@ -17,7 +17,7 @@ export interface ISelect extends IFilterBase {
 }
 
 export interface IRange extends IFilterBase {
-    key: ListingKeys;
+    key: FeatureKeys;
     min: number;
     max: number;
 }

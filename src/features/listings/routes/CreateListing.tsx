@@ -13,7 +13,7 @@ import Cropper from 'react-easy-crop';
 import { createImage, getCroppedImg } from '@utilities/image';
 import { Web3Storage } from 'web3.storage';
 import { guid } from '@utilities/rand';
-import { FeatureKeys, IListing, ListingFeatureFacets, ListingFeatureTypes, Options } from '../types/listing';
+import { FeatureKeys, IListing, ListingFeatureFacets, ListingFeatureOptionKeys, ListingFeatureOptions, ListingFeatureTypes, Options } from '../types/listing';
 import { FacetMapping } from '@filter/types/facets';
 import clone from '@utilities/clone';
 
@@ -40,10 +40,14 @@ export function CreateListing({ listing }: HasListing) {
     setlistingState({ ...listing, [prop]: e.target.value });
   };
 
-  const handleToggleFacet = (feature: FeatureKeys, facetKey: Options) => (e: any) => {
-    let cloned = clone<{ [k in keyof ListingFeatureTypes]: Options[] }>(listingState.features);
-    cloned[feature].some(k => k === facetKey) ? cloned[feature] = cloned[feature].filter(k => k !== facetKey) : cloned[feature].push(facetKey);
-    setlistingState({ ...listingState, features: cloned as ListingFeatureFacets });
+  const handleToggleFacet = (feature: ListingFeatureOptionKeys, facetKey: Options) => (e: any) => {
+    let cloned = clone<ListingFeatureFacets>(listingState.features) as ListingFeatureFacets;
+    let a = cloned[feature] as Options[];
+    if (a !== undefined) {
+      a.some(k => k === facetKey) ? a = a.filter(k => k !== facetKey) : a.push(facetKey);
+      setlistingState({ ...listingState, features: cloned as ListingFeatureFacets });
+    }
+ 
   }
 
   const uploadPhoto = async (e: any) => {
@@ -99,26 +103,27 @@ export function CreateListing({ listing }: HasListing) {
     </Box>
 
   const features =
-    <Box className="mt-24">
-      {Object.entries(FacetMapping).map(([feature, value]) => {
-        return (
-          <FormGroup className="mb-16" key={feature}>
-            <FormLabel className="mb-12">{value[0]}</FormLabel>
-            <Box className="flex flex-wrap mb-8">
-              {
-                Object.entries(value[1]).map(([key, value]) =>
-                  <Chip
-                    className='mr-8'
-                    key={key}
-                    label={value}
-                    variant={listingState.features[feature as FeatureKeys].some(k => k === key) ? 'filled' : 'outlined'}
-                    onClick={handleToggleFacet(feature as FeatureKeys, key as Options)}
-                  />
-                )}
-            </Box>
-          </FormGroup>)
-      })}
-    </Box>
+    // <Box className="mt-24">
+    //   {Object.entries(FacetMapping).map(([feature, value]) => {
+    //     return (
+    //       <FormGroup className="mb-16" key={feature}>
+    //         <FormLabel className="mb-12">{value[0]}</FormLabel>
+    //         <Box className="flex flex-wrap mb-8">
+    //           {
+    //             Object.entries(value[1]).map(([key, value]) =>
+    //               <Chip
+    //                 className='mr-8'
+    //                 key={key}
+    //                 label={value}
+    //                 variant={listingState.features[feature as FeatureKeys].some(k => k === key) ? 'filled' : 'outlined'}
+    //                 onClick={handleToggleFacet(feature as FeatureKeys, key as Options)}
+    //               />
+    //             )}
+    //         </Box>
+    //       </FormGroup>)
+    //   })}
+    // </Box>
+    <></>
 
   const PhotoUpload =
     <>

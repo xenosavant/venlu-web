@@ -22,5 +22,5 @@ export const FacetMapping: FacetMapType = {
         'dj': 'DJ',
         'catering': 'Catering'
     }],
-    price: ['price', [0, 10000]]
+    price: ['Price range', [0, 10000]]
 }
