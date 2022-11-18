@@ -104,7 +104,6 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    console.log('uiState', uiState);
     if (uiState.createListingModalOpen) {
       lockScroll();
     } else {

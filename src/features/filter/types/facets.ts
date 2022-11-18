@@ -1,6 +1,7 @@
-import { ListingFeatureTypes } from "@listings/types/listing"
+import { ListingFeatureFacets, ListingFeatureTypes } from "@listings/types/listing"
 
-export type FacetMapType = { [k in keyof ListingFeatureTypes]: [string, Record<ListingFeatureTypes[k], string>] };
+export type FacetMapType = { [k in keyof Required<ListingFeatureTypes>]: 
+    [string, ListingFeatureFacets[k] extends number | undefined ? [number, number] : Record<ListingFeatureTypes[k], string> ] };
 
 // Conrete facet map strictly typed by the listing features
 export const FacetMapping: FacetMapType = {
@@ -20,5 +21,6 @@ export const FacetMapping: FacetMapType = {
         'dancefloor': 'Dancefloor',
         'dj': 'DJ',
         'catering': 'Catering'
-    }]
+    }],
+    price: ['price', [0, 10000]]
 }

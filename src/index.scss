@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 #root {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
-    background-color: white;
+  background-color: white;
 }
 
 .bordered-box {
-    background-color: #FDFDFD;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    padding: 12px;
+  background-color: #fdfdfd;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 12px;
 }
