@@ -1,253 +1,166 @@
 {
-    "users": [],
-    "listings": [
-        {
-            "id": 1,
-            "title": "Listing 1",
-            "images": [
-                "./src/assets/listings/listing1.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 1 description",
-            "price": "100",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "indoor"
-                ],
-                "amenities": [
-                    "bar"
-                ],
-                "example": [
-                    "example1",
-                    "example2"
-                ]
-            }
-        },
-        {
-            "id": 2,
-            "title": "Listing 2",
-            "images": [
-                "./src/assets/listings/listing2.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 2 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 3,
-            "title": "Listing 3",
-            "images": [
-                "./src/assets/listings/listing3.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 4,
-            "title": "Listing 4",
-            "images": [
-                "./src/assets/listings/listing4.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 5,
-            "title": "Listing 5",
-            "images": [
-                "./src/assets/listings/listing5.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 6,
-            "title": "Listing 6",
-            "images": [
-                "./src/assets/listings/listing6.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "bachelorette"
-                ],
-                "coverage": [
-                    "outdoor",
-                    "indoor"
-                ]
-            }
-        },
-        {
-            "id": 7,
-            "title": "Listing 7",
-            "images": [
-                "./src/assets/listings/listing7.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 8,
-            "title": "Listing 8",
-            "images": [
-                "./src/assets/listings/listing8.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception",
-                    "bachelorette",
-                    "bachelor"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 9,
-            "title": "Listing 9",
-            "images": [
-                "./src/assets/listings/listing9.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 10,
-            "title": "Listing 10",
-            "images": [
-                "./src/assets/listings/listing10.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 11,
-            "title": "Listing 11",
-            "images": [
-                "./src/assets/listings/listing11.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        },
-        {
-            "id": 12,
-            "title": "Listing 12",
-            "images": [
-                "./src/assets/listings/listing12.jpg"
-            ],
-            "primaryImageIndex": 0,
-            "description": "Listing 3 description",
-            "price": "10000",
-            "duration": "hour",
-            "features": {
-                "event": [
-                    "wedding",
-                    "reception"
-                ],
-                "coverage": [
-                    "outdoor"
-                ]
-            }
-        }
-    ]
+  "users": [],
+  "listings": [
+    {
+      "id": 1,
+      "title": "Listing 1",
+      "images": ["./src/assets/listings/listing1.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 1 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["indoor"],
+        "amenities": ["bar"],
+        "price": 100
+      }
+    },
+    {
+      "id": 2,
+      "title": "Listing 2",
+      "images": ["./src/assets/listings/listing2.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 2 description",
+      "price": "10000",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 1000
+      }
+    },
+    {
+      "id": 3,
+      "title": "Listing 3",
+      "images": ["./src/assets/listings/listing3.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "price": "10000",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 1000
+      }
+    },
+    {
+      "id": 4,
+      "title": "Listing 4",
+      "images": ["./src/assets/listings/listing4.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding"],
+        "coverage": ["outdoor"],
+        "price": 1000
+      }
+    },
+    {
+      "id": 5,
+      "title": "Listing 5",
+      "images": ["./src/assets/listings/listing5.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 10000
+      }
+    },
+    {
+      "id": 6,
+      "title": "Listing 6",
+      "images": ["./src/assets/listings/listing6.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["bachelorette"],
+        "coverage": ["outdoor", "indoor"],
+        "price": 14500
+      }
+    },
+    {
+      "id": 7,
+      "title": "Listing 7",
+      "images": ["./src/assets/listings/listing7.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 14500
+      }
+    },
+    {
+      "id": 8,
+      "title": "Listing 8",
+      "images": ["./src/assets/listings/listing8.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "price": "10000",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception", "bachelorette", "bachelor"],
+        "coverage": ["outdoor"],
+        "price": 1450
+      }
+    },
+    {
+      "id": 9,
+      "title": "Listing 9",
+      "images": ["./src/assets/listings/listing9.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 15000
+      }
+    },
+    {
+      "id": 10,
+      "title": "Listing 10",
+      "images": ["./src/assets/listings/listing10.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 14500
+      }
+    },
+    {
+      "id": 11,
+      "title": "Listing 11",
+      "images": ["./src/assets/listings/listing11.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 10000
+      }
+    },
+    {
+      "id": 12,
+      "title": "Listing 12",
+      "images": ["./src/assets/listings/listing12.jpg"],
+      "primaryImageIndex": 0,
+      "description": "Listing 3 description",
+      "price": "10000",
+      "duration": "hour",
+      "features": {
+        "event": ["wedding", "reception"],
+        "coverage": ["outdoor"],
+        "price": 100000
+      }
+    }
+  ]
 }

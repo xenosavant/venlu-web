@@ -1,10 +1,19 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
-  Routes, Route, useNavigate, useLocation,
-} from 'react-router-dom';
-import {
-  AppBar, Box, Container, Dialog, Drawer, IconButton,
-  List, Menu, Modal, Popover, Toolbar, Typography, CircularProgress,
+  AppBar,
+  Box,
+  Container,
+  Dialog,
+  Drawer,
+  IconButton,
+  List,
+  Menu,
+  Modal,
+  Popover,
+  Toolbar,
+  Typography,
+  CircularProgress,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -15,10 +24,8 @@ import Bookings from './routes/Bookings';
 import Nav from './components/Nav';
 import FilterModal from './components/modals/FilterModal';
 import { useAppDispatch, useAppSelector } from './store/app';
-import {
-  filterModalClosed, filterModalOpened, selectUiState, UiState,
-} from './store/reducers/uiReducer';
-import useQuery from './hooks/query';
+import { filterModalClosed, filterModalOpened, selectUiState, UiState } from './store/reducers/uiReducer';
+import useQuery from './hooks/useQuery';
 import { CreateListing } from './features/listings/routes/CreateListing';
 import { guid } from './utilities/rand';
 
@@ -72,9 +79,7 @@ function App() {
     navigate('/');
   };
 
-  const nav = (
-    <Nav handleRoute={handleDrawerToggle} />
-  );
+  const nav = <Nav handleRoute={handleDrawerToggle} />;
 
   const loading = <CircularProgress className="mt-24" size="24px" color="primary" />;
 
@@ -111,7 +116,6 @@ function App() {
     }
   }, [uiState]);
 
-
   // MUI is buggy and doens't unlock the scroll on menu close
   // Do it manually here with timeout to ensure render cycle is complete
   function unlockScroll() {
@@ -128,27 +132,21 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box className="w-full h-screen">
+      <div className="w-full h-screen">
         <AppBar position="fixed" elevation={0} sx={{ borderBottom: '1px solid #e2e8f0' }}>
           <Container
             className="flex flex-row items-center h-64 m-auto"
             sx={{ display: 'flex', maxWidth: '2000px !important' }}
           >
-            <IconButton
-              className="h-48"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: 'none' } }}
-            >
+            <IconButton className="h-48" onClick={handleDrawerToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
               <MenuIcon sx={{ color: 'white' }} />
             </IconButton>
-            <Box onClick={() => handleGoHome()} sx={{ mr: 2 }}>
+            <div onClick={() => handleGoHome()} className="mr-2">
               <Typography sx={{ color: 'white', cursor: 'pointer' }} variant="h5">
                 VENLU
               </Typography>
-            </Box>
-            <Box className="flex-1">
-              {/* <SearchBar /> */}
-            </Box>
+            </div>
+            <div className="flex-1">{/* <SearchBar /> */}</div>
             <IconButton onClick={handleMenuClick} className="aspect-square h-48 hidden sm:inline-flex">
               <PersonOutlinedIcon sx={{ color: 'white' }} />
             </IconButton>
@@ -164,15 +162,13 @@ function App() {
           onClose={handleMenuClose}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
-          }}>
+          }}
+        >
           {nav}
         </Menu>
-        <Box sx={{ margin: { sm: '0 16px' } }} className="margin-auto h-full mt-56">
+        <div className="margin-auto h-full mt-56 sm:mx-16">
           <Container sx={{ padding: '0', maxWidth: '2000px !important' }}>
-            <Box
-              component="nav"
-              sx={{ flexShrink: { sm: 0 } }}
-            >
+            <div className="sm:flex-shrink-0">
               <Drawer
                 variant="temporary"
                 open={mobileOpen}
@@ -187,12 +183,11 @@ function App() {
                 }}
               >
                 <Toolbar />
-                <List className="bordered-box">
-                  {nav}
-                </List>
+                <List className="bordered-box">{nav}</List>
               </Drawer>
               {showSidebar && (
                 <Box
+                  className=""
                   sx={{
                     marginLeft: '16px',
                     width: drawerWidth,
@@ -206,7 +201,7 @@ function App() {
                 </Box>
               )}
               {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
-            </Box>
+            </div>
             <Box
               sx={{
                 padding: { xs: '0px', sm: '0px 16px' },
@@ -218,12 +213,54 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/" element={<Suspense fallback={loading}><Home /></Suspense>} />
-                <Route path="/favorites" element={<Suspense fallback={loading}><Favorites /></Suspense>} />
-                <Route path="/bookings" element={<Suspense fallback={loading}><Bookings /></Suspense>} />
-                <Route path="/profile" element={<Suspense fallback={loading}><Account /></Suspense>} />
-                <Route path="/settings" element={<Suspense fallback={loading}><Settings /></Suspense>} />
-                <Route path="/listings/:id" element={<Suspense fallback={loading}><ListingDetail /></Suspense>} />
+                <Route
+                  path="/"
+                  element={
+                    <Suspense fallback={loading}>
+                      <Home />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/favorites"
+                  element={
+                    <Suspense fallback={loading}>
+                      <Favorites />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/bookings"
+                  element={
+                    <Suspense fallback={loading}>
+                      <Bookings />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <Suspense fallback={loading}>
+                      <Account />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <Suspense fallback={loading}>
+                      <Settings />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/listings/:id"
+                  element={
+                    <Suspense fallback={loading}>
+                      <ListingDetail />
+                    </Suspense>
+                  }
+                />
               </Routes>
             </Box>
           </Container>
@@ -234,7 +271,6 @@ function App() {
                   id: guid(),
                   title: '',
                   description: '',
-                  price: 0,
                   images: [],
                   primaryImageIndex: 0,
                   capacity: 0,
@@ -242,13 +278,15 @@ function App() {
                   features: {
                     event: [],
                     amenities: [],
-                    coverage: []
-                  }
-                }}></CreateListing>
+                    coverage: [],
+                    price: 0,
+                  },
+                }}
+              ></CreateListing>
             </>
           </Modal>
-        </Box>
-      </Box>
+        </div>
+      </div>
     </ThemeProvider>
   );
 }

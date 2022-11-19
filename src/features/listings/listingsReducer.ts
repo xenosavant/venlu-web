@@ -4,26 +4,26 @@ import axios from 'axios';
 import sleep from '../../utilities/sleep';
 import { IFilter } from '../filter/filtersReducer';
 import { IRange, ISelect } from '../filter/types/filter';
-import { IListing, Options, UntypedFeatures } from './types/listing';
+import { IListing, LISTING_FEATURE_OPTIONS, Options } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
 export interface ListingState {
-  listingsData: ListingData
-  listingsStatus: ResponseStatus
-  error: string | undefined
-  filteredCount: number
-  filteredCountStatus: ResponseStatus
-  facets: IFacet[] | undefined
+  listingsData: ListingData;
+  listingsStatus: ResponseStatus;
+  error: string | undefined;
+  filteredCount: number;
+  filteredCountStatus: ResponseStatus;
+  facets: IFacet[] | undefined;
 }
 
 export interface ListingData {
-  listings: IListing[]
-  count: number
+  listings: IListing[];
+  count: number;
 }
 
 export interface IFacet {
-  key: string
+  key: string;
 }
 
 export interface RangeFacet extends IFacet {
@@ -35,6 +35,7 @@ export interface CountFacet extends IFacet {
   count: number;
 }
 
+export type Facets = RangeFacet & CountFacet;
 
 const initialState: ListingState = {
   listingsStatus: 'idle',
@@ -46,39 +47,48 @@ const initialState: ListingState = {
 };
 
 function filterData(data: IListing[], filters: IFilter): IListing[] {
-  const selectFiltered = data.filter((item: IListing) => filters['select'].every(
-    (filter: ISelect) => filter.selected?.every(
-      (selectedValue: Options) => ((item.features as UntypedFeatures)[filter.key])?.includes(selectedValue),
-    ),
-  ));
+  const selectFiltered = data.filter((item: IListing) =>
+    filters['select'].every((filter: ISelect) =>
+      filter.selected?.every((selectedValue: Options) =>
+        LISTING_FEATURE_OPTIONS.some((key) => (item.features[key] as Options[])?.includes(selectedValue))
+      )
+    )
+  );
 
-  const filtered = selectFiltered.filter((item: IListing) => filters['range'].every(
-    (filter: IRange) => item[filter.key] as number
-      >= (filter.min)
-      && item[filter.key as keyof IListing] as number
-      <= (filter.max),
-  ));
+  const filtered = selectFiltered.filter((item: IListing) =>
+    filters['range'].every(
+      (filter: IRange) =>
+        (item.features[filter.key] as number) >= filter.min && (item.features[filter.key] as number) <= filter.max
+    )
+  );
   return filtered;
 }
 
 function calculateSelectFacets(filters: ISelect[], listings: IListing[]): IFacet[] {
-  return filters.map((filter: ISelect) => {
-    const options = (filter.options || []).map((option) => {
-      const count = listings.filter(
-        (listing: IListing) => (listing.features as UntypedFeatures)[filter.key]?.includes(option.key),
-      ).length;
-      return { key: option.key as string, count };
-    });
-    return [...options];
-  }).reduce((acc, curr) => [...acc, ...curr], []);
+  return filters
+    .map((filter: ISelect) => {
+      const options = (filter.options || []).map((option) => {
+        const count = listings.filter((listing: IListing) =>
+          (listing.features[filter.key] as Options[])?.includes(option.key)
+        ).length;
+        return { key: option.key as string, count };
+      });
+      return [...options];
+    })
+    .reduce((acc, curr) => [...acc, ...curr], []);
 }
 
 function calculateRangeFacets(filters: IRange[], listings: IListing[]): RangeFacet[] {
-  return filters.map((filter: IRange) => listings.reduce<RangeFacet>((acc: RangeFacet, curr: IListing) => {
-    const min = Math.min(acc.min, curr[filter.key] as number);
-    const max = Math.max(acc.max, curr[filter.key] as number);
-    return { key: filter.key, min, max };
-  }, { key: filter.key, min: Infinity, max: -Infinity }));
+  return filters.map((filter: IRange) =>
+    listings.reduce<RangeFacet>(
+      (acc: RangeFacet, curr: IListing) => {
+        const min = Math.min(acc.min, curr.features[filter.key] as number);
+        const max = Math.max(acc.max, curr.features[filter.key] as number);
+        return { key: filter.key, min, max };
+      },
+      { key: filter.key, min: Infinity, max: -Infinity }
+    )
+  );
 }
 
 export const fetchListings = createAsyncThunk(
@@ -94,18 +104,15 @@ export const fetchListings = createAsyncThunk(
       facets: [...rangeFacets, ...selectFacets],
       count: filtered.length,
     };
-  },
+  }
 );
 
-export const fetchListingsCount = createAsyncThunk(
-  'listings/fetchListingsCount',
-  async (filters: IFilter) => {
-    await sleep();
-    const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
-    const filtered = filterData(response.data, filters);
-    return { count: filtered.length };
-  },
-);
+export const fetchListingsCount = createAsyncThunk('listings/fetchListingsCount', async (filters: IFilter) => {
+  await sleep();
+  const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
+  const filtered = filterData(response.data, filters);
+  return { count: filtered.length };
+});
 
 const listingSlice = createSlice({
   name: 'listing',

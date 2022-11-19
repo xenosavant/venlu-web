@@ -2,9 +2,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@store/app';
 import { IFilter, getFilters } from '@filter/filtersReducer';
-import {
-  selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData,
-} from '../listingsReducer';
+import { selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData } from '../listingsReducer';
 import { selectUiState, UiState } from '@store/reducers/uiReducer';
 import Listing from '@listings/Listing';
 
@@ -27,12 +25,14 @@ export default function Home() {
 
   return (
     <>
-      <Box>
-        {listingsStatus === 'loading' && <div className="m-auto w-fit"><CircularProgress className="mt-24" size="24px" color="primary" /></div>}
-      </Box>
-      <Box>
-        {listingsStatus === 'failed' && <Typography className="m-auto w-fit text-red-700"> ERROR </Typography>}
-      </Box>
+      <div>
+        {listingsStatus === 'loading' && (
+          <div className="m-auto w-fit">
+            <CircularProgress className="mt-24" size="24px" color="primary" />
+          </div>
+        )}
+      </div>
+      <div>{listingsStatus === 'failed' && <Typography className="m-auto w-fit text-red-700"> ERROR </Typography>}</div>
       <Box
         sx={{
           gridTemplateRows: 'auto',
@@ -44,9 +44,8 @@ export default function Home() {
         }}
         className="grid"
       >
-        {listingsStatus === 'success' && listingsData.listings.map((listing) => (
-          <Listing key={listing.id} listing={listing} />
-        ))}
+        {listingsStatus === 'success' &&
+          listingsData.listings.map((listing) => <Listing key={listing.id} listing={listing} />)}
       </Box>
     </>
   );
