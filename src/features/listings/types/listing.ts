@@ -23,8 +23,8 @@ export type ListingFeatureTypes = {
 export type U<T extends keyof typeof Facets> = keyof typeof Facets[T];
 
 export type ListingFeatureFacets = {
-  [k in keyof Required<ListingFeatureTypes>]: Required<ListingFeatureTypes[k]> extends number | undefined
-    ? number | undefined
+  [k in keyof Required<ListingFeatureTypes>]: Required<ListingFeatureTypes[k]> extends number
+    ? number
     : Array<ListingFeatureTypes[k]> | undefined;
 };
 

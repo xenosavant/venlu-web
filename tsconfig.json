@@ -2,11 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["@types/react-dom", "vitest/globals"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -21,41 +18,19 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "@components/*": [
-        "components/*"
-      ],
-      "@utilities/*": [
-        "utilities/*"
-      ],
-      "@routes/*": [
-        "routes/*"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@store*": [
-        "store*"
-      ],
-      "@store/*": [
-        "store/*"
-      ],
-      "@data*": [
-        "data/*"
-      ],
-      "@filter/*": [
-        "features/filter/*"
-      ],
-      "@listings/*": [
-        "features/listings/*"
-      ],
-      "@users*": [
-        "features/users/*"
-      ],
+      "@components/*": ["components/*"],
+      "@utilities/*": ["utilities/*"],
+      "@routes/*": ["routes/*"],
+      "@hooks/*": ["hooks/*"],
+      "@store*": ["store*"],
+      "@store/*": ["store/*"],
+      "@data*": ["data/*"],
+      "@filter/*": ["features/filter/*"],
+      "@listings/*": ["features/listings/*"],
+      "@users*": ["features/users/*"]
     }
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "references": [
     {
       "path": "./tsconfig.node.json"

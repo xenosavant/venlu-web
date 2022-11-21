@@ -14,7 +14,7 @@ export interface ListingState {
   error: string | undefined;
   filteredCount: number;
   filteredCountStatus: ResponseStatus;
-  facets: IFacet[] | undefined;
+  facets: (IRange | ISelect)[] | undefined;
 }
 
 export interface ListingData {
@@ -96,7 +96,7 @@ export const fetchListings = createAsyncThunk(
   async (filters: IFilter = { select: [], range: [] }) => {
     await sleep();
     const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
-    const filtered = filterData(response.data, filters);
+    const filtered = filterData([], filters);
     const selectFacets = calculateSelectFacets(filters['select'], filtered);
     const rangeFacets = calculateRangeFacets(filters['range'], response.data);
     return {
@@ -120,6 +120,9 @@ const listingSlice = createSlice({
   reducers: {
     filterCountUpdated: (state, action: PayloadAction<number>) => {
       state.filteredCount = action.payload;
+    },
+    listingsUpdated: (state, action: PayloadAction<IListing[]>) => {
+      state.listingsData.listings = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -148,5 +151,5 @@ export const getListingsError = (state: any) => state.listing.error;
 export const getFilteredCount = (state: any) => state.listing.filteredCount;
 export const getFacets = (state: any) => state.listing.facets;
 
-export const { filterCountUpdated } = listingSlice.actions;
+export const { filterCountUpdated, listingsUpdated } = listingSlice.actions;
 export default listingSlice.reducer;

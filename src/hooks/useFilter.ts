@@ -6,11 +6,7 @@ import clone from '@utilities/clone';
 import { useEffect, useState } from 'react';
 
 export const useFilter = (filters: IFilter, facets: Facets[], updateFilters: (updates: IFilter) => void) => {
-  const [cachedFilters, setCachedFilters] = useState<IFilter>({ select: [], range: [] });
-
-  useEffect(() => {
-    setCachedFilters(clone(filters));
-  }, []);
+  const [cachedFilters, setCachedFilters] = useState<IFilter>(filters);
 
   const normalizeRange = (value: number, rangeMin: number, rangeMax: number): number =>
     ((value - rangeMin) / (rangeMax - rangeMin)) * 100;

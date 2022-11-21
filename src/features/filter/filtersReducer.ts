@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  ListingFeatureNumberKeys,
-  ListingFeatureOptionKeys,
-  Options,
-} from '@listings/types/listing';
+import { ListingFeatureNumberKeys, ListingFeatureOptionKeys, Options } from '@listings/types/listing';
 import { FacetMapping } from './types/facets';
 import { IRange, ISelect, SelectType } from './types/filter';
 
@@ -29,7 +25,7 @@ const initialState: FilterState = {
   },
 };
 
-function createSelectFilter<T extends ListingFeatureOptionKeys>(
+export function createSelectFilter<T extends ListingFeatureOptionKeys>(
   key: T,
   order: number,
   selectType: SelectType
@@ -47,7 +43,7 @@ function createSelectFilter<T extends ListingFeatureOptionKeys>(
   };
 }
 
-function createRangeFilter<T extends ListingFeatureNumberKeys>(key: T, order: number): IRange {
+export function createRangeFilter<T extends ListingFeatureNumberKeys>(key: T, order: number): IRange {
   const range = FacetMapping[key][1] as [number, number];
   return {
     order: order,

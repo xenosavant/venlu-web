@@ -53,7 +53,9 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
             filter.min !== undefined &&
             filter.max !== undefined && (
               <FormGroup className="mb-32 mt-16" key={filter.key}>
-                <FormLabel className="mb-16">{filter.title}</FormLabel>
+                <FormLabel id={filter.key} className="mb-16">
+                  {filter.title}
+                </FormLabel>
                 <div className="mb-8">
                   {`$${
                     filter.min < getRangeFacet(filter.key).min
@@ -64,6 +66,9 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
                 </div>
                 <div className="mr-32">
                   <Slider
+                    data-testid={`${filter.key}`}
+                    getAriaLabel={() => filter.key}
+                    name={filter.key}
                     value={[
                       normalizeRange(filter.min, getRangeFacet(filter.key).min, getRangeFacet(filter.key).max),
                       normalizeRange(filter.max, getRangeFacet(filter.key).min, getRangeFacet(filter.key).max),
@@ -85,7 +90,9 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
           return (
             filter.options.some((o) => (facets.find((f) => f.key === o.key)?.count as number) > 0) && (
               <FormGroup className="mb-32 mt-16" key={filter.key}>
-                <FormLabel className="mb-16">{filter.title}</FormLabel>
+                <FormLabel aria-label={filter.title} className="mb-16">
+                  {filter.title}
+                </FormLabel>
                 {filter.options
                   .filter((o) => (showFacets ? !facets || facets.find((f) => f.key === o.key)?.count !== 0 : true))
                   .map((option) => (
