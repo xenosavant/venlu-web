@@ -22,6 +22,10 @@ export default function Listings() {
     }
   }, [filters]);
 
+  useEffect(() => {
+    console.log(listingsData);
+  }, [listingsData]);
+
   return (
     <>
       <ListingsList listings={listingsData} listingsStatus={listingsStatus} />
