@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@store/app';
 import { IFilter, getFilters } from '@filter/filtersReducer';
 import { selectListings, getListingsStatus, fetchListings, ResponseStatus, ListingData } from '../listingsReducer';
 import { selectUiState, UiState } from '@store/reducers/uiReducer';
-import ListingsList from '@listings/ListingsList';
+import ListingsList from '@listings/components/ListingsList';
 
 export default function Listings() {
   const dispatch = useAppDispatch();

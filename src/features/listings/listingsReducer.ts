@@ -4,7 +4,7 @@ import axios from 'axios';
 import sleep from '../../utilities/sleep';
 import { IFilter } from '../filter/filtersReducer';
 import { IRange, ISelect } from '../filter/types/filter';
-import { IListing, LISTING_FEATURE_OPTIONS, Options } from './types/listing';
+import { IListing, Options } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
 
@@ -47,11 +47,10 @@ const initialState: ListingState = {
 };
 
 function filterData(data: IListing[], filters: IFilter): IListing[] {
-  console.log(data, filters);
   const selectFiltered = data.filter((item: IListing) =>
     filters['select'].every((filter: ISelect) =>
       filter.selected?.every((selectedValue: Options) =>
-        LISTING_FEATURE_OPTIONS.some((key) => (item.features[key] as Options[])?.includes(selectedValue))
+        (item.features[filter.key] as Options[]).includes(selectedValue)
       )
     )
   );

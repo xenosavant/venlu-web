@@ -1,4 +1,4 @@
-import { ListingFeatureFacets, Facets } from '@listings/types/listing';
+import { ListingFeatureFacets, Facets, EventTypes } from '@listings/types/listing';
 
 export type FacetMap = {
   [k in keyof Required<typeof Facets>]: [
@@ -17,8 +17,7 @@ export const FacetMapping: FacetMap = {
       wedding: 'Wedding',
       reception: 'Reception',
       bridalShower: 'Bridal shower',
-      bachelorette: 'Bachelorette party',
-      bachelor: 'Bachelor party',
+      rehearsal: 'Wedding Rehearsal',
     },
   ],
   coverage: [
@@ -40,4 +39,4 @@ export const FacetMapping: FacetMap = {
   price: ['Price range', [0, 100000]],
 };
 
-export type MinNumber<T extends number> = T;
+export const EventDisplayValues = Object.entries(FacetMapping['event'][1]).map((v) => v[1]);

@@ -28,6 +28,9 @@ import { filterModalClosed, filterModalOpened, selectUiState, UiState } from './
 import useQuery from './hooks/useQuery';
 import { CreateListing } from './features/listings/routes/CreateListing';
 import { guid } from './utilities/rand';
+import Book from 'features/bookings/routes/Book';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const Home = lazy(() => import('./features/listings/routes/Listings'));
 const Favorites = lazy(() => import('./routes/Favorites'));
@@ -132,161 +135,171 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="w-full h-screen">
-        <AppBar position="fixed" elevation={0} sx={{ borderBottom: '1px solid #e2e8f0' }}>
-          <Container
-            className="flex flex-row items-center h-64 m-auto"
-            sx={{ display: 'flex', maxWidth: '2000px !important' }}
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <div className="w-full h-screen">
+          <AppBar position="fixed" elevation={0} sx={{ borderBottom: '1px solid #e2e8f0' }}>
+            <Container
+              className="flex flex-row items-center h-64 m-auto"
+              sx={{ display: 'flex', maxWidth: '2000px !important' }}
+            >
+              <IconButton className="h-48" onClick={handleDrawerToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
+                <MenuIcon sx={{ color: 'white' }} />
+              </IconButton>
+              <div onClick={() => handleGoHome()} className="mr-2">
+                <Typography sx={{ color: 'white', cursor: 'pointer' }} variant="h5">
+                  VENLU
+                </Typography>
+              </div>
+              <div className="flex-1">{/* <SearchBar /> */}</div>
+              <IconButton onClick={handleMenuClick} className="aspect-square h-48 hidden sm:inline-flex">
+                <PersonOutlinedIcon sx={{ color: 'white' }} />
+              </IconButton>
+              <IconButton onClick={handleMobileFilterClick} className="aspect-square h-48 sm:hidden">
+                <FilterListIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Container>
+          </AppBar>
+          <Menu
+            className="p-0"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
           >
-            <IconButton className="h-48" onClick={handleDrawerToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
-              <MenuIcon sx={{ color: 'white' }} />
-            </IconButton>
-            <div onClick={() => handleGoHome()} className="mr-2">
-              <Typography sx={{ color: 'white', cursor: 'pointer' }} variant="h5">
-                VENLU
-              </Typography>
-            </div>
-            <div className="flex-1">{/* <SearchBar /> */}</div>
-            <IconButton onClick={handleMenuClick} className="aspect-square h-48 hidden sm:inline-flex">
-              <PersonOutlinedIcon sx={{ color: 'white' }} />
-            </IconButton>
-            <IconButton onClick={handleMobileFilterClick} className="aspect-square h-48 sm:hidden">
-              <FilterListIcon sx={{ color: 'white' }} />
-            </IconButton>
-          </Container>
-        </AppBar>
-        <Menu
-          className="p-0"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          {nav}
-        </Menu>
-        <div className="margin-auto h-full mt-56 sm:mx-16">
-          <Container sx={{ padding: '0', maxWidth: '2000px !important' }}>
-            <div className="sm:flex-shrink-0">
-              <Drawer
-                variant="temporary"
-                open={mobileOpen}
-                anchor="left"
-                onClose={handleDrawerToggle}
-                ModalProps={{
-                  keepMounted: true, // Better open performance on mobile.
-                }}
-                sx={{
-                  display: { xs: 'block', sm: 'none' },
-                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                }}
-              >
-                <Toolbar />
-                <List className="bordered-box">{nav}</List>
-              </Drawer>
-              {showSidebar && (
-                <Box
-                  className=""
+            {nav}
+          </Menu>
+          <div className="margin-auto h-full mt-56 sm:mx-16">
+            <Container sx={{ padding: '0', maxWidth: '2000px !important' }}>
+              <div className="sm:flex-shrink-0">
+                <Drawer
+                  variant="temporary"
+                  open={mobileOpen}
+                  anchor="left"
+                  onClose={handleDrawerToggle}
+                  ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                  }}
                   sx={{
-                    marginLeft: '16px',
-                    width: drawerWidth,
-                    marginTop: { sm: '114px' },
-                    display: { xs: 'none', sm: 'block' },
-                    position: 'fixed',
+                    display: { xs: 'block', sm: 'none' },
                     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                   }}
                 >
-                  <Filter showFacets />
-                </Box>
-              )}
-              {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
-            </div>
-            <Box
-              sx={{
-                padding: { xs: '0px', sm: '0px 16px' },
-                flexGrow: 1,
-                p: 3,
-                mt: { xs: '64px', sm: '100px' },
-                minHeight: 'calc(100vh - 128px)',
-                width: showSidebar ? { xs: '100%', sm: `calc(100% - ${drawerWidth}px)`, float: 'right' } : '100%',
-              }}
-            >
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <Suspense fallback={loading}>
-                      <Home />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/favorites"
-                  element={
-                    <Suspense fallback={loading}>
-                      <Favorites />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/bookings"
-                  element={
-                    <Suspense fallback={loading}>
-                      <Bookings />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <Suspense fallback={loading}>
-                      <Account />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <Suspense fallback={loading}>
-                      <Settings />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/listings/:id"
-                  element={
-                    <Suspense fallback={loading}>
-                      <ListingDetail />
-                    </Suspense>
-                  }
-                />
-              </Routes>
-            </Box>
-          </Container>
-          <Modal open={uiState.createListingModalOpen}>
-            <>
-              <CreateListing
-                listing={{
-                  id: guid(),
-                  title: '',
-                  description: '',
-                  images: [],
-                  primaryImageIndex: 0,
-                  capacity: 0,
-                  parkingCapacity: 0,
-                  features: {
-                    event: [],
-                    amenities: [],
-                    coverage: [],
-                    price: 0,
-                  },
+                  <Toolbar />
+                  <List className="bordered-box">{nav}</List>
+                </Drawer>
+                {showSidebar && (
+                  <Box
+                    className=""
+                    sx={{
+                      marginLeft: '16px',
+                      width: drawerWidth,
+                      marginTop: { sm: '114px' },
+                      display: { xs: 'none', sm: 'block' },
+                      position: 'fixed',
+                      '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    }}
+                  >
+                    <Filter showFacets />
+                  </Box>
+                )}
+                {uiState.filterModalOpen && <FilterModal onClose={handleMobileFilterClose} />}
+              </div>
+              <Box
+                sx={{
+                  padding: { xs: '0px', sm: '0px 16px' },
+                  flexGrow: 1,
+                  p: 3,
+                  mt: { xs: '64px', sm: '100px' },
+                  minHeight: 'calc(100vh - 128px)',
+                  width: showSidebar ? { xs: '100%', sm: `calc(100% - ${drawerWidth}px)`, float: 'right' } : '100%',
                 }}
-              ></CreateListing>
-            </>
-          </Modal>
+              >
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Home />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/favorites"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Favorites />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/bookings"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Bookings />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Account />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Settings />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/listings/:id"
+                    element={
+                      <Suspense fallback={loading}>
+                        <ListingDetail />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/book/:id"
+                    element={
+                      <Suspense fallback={loading}>
+                        <Book />
+                      </Suspense>
+                    }
+                  />
+                </Routes>
+              </Box>
+            </Container>
+            <Modal open={uiState.createListingModalOpen}>
+              <>
+                <CreateListing
+                  listing={{
+                    id: guid(),
+                    title: '',
+                    description: '',
+                    images: [],
+                    primaryImageIndex: 0,
+                    capacity: 0,
+                    parkingCapacity: 0,
+                    features: {
+                      event: [],
+                      amenities: [],
+                      coverage: [],
+                      price: 0,
+                    },
+                  }}
+                ></CreateListing>
+              </>
+            </Modal>
+          </div>
         </div>
-      </div>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }

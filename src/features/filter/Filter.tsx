@@ -9,10 +9,10 @@ import {
   Slider,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/app';
 import { IFilter, filtersUpdated, getFilters } from './filtersReducer';
-import { CountFacet, Facets, fetchListingsCount, getFacets } from '@listings/listingsReducer';
+import { CountFacet, Facet, fetchListingsCount, getFacets, RangeFacet } from '@listings/listingsReducer';
 import { useFilter } from '@hooks/useFilter';
 
 export default function Filter({ showFacets }: { showFacets: boolean }) {
@@ -21,7 +21,7 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
   // It should also react to filter input and update the listingState when the filter is selected
 
   const filters = useAppSelector<IFilter>(getFilters);
-  const facets = useAppSelector<Facets[]>(getFacets);
+  const facets = useAppSelector<Facet[]>(getFacets);
 
   const updateFilters = useCallback(
     debounce((updates: IFilter) => {
@@ -88,13 +88,15 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
         facets.length !== 0 &&
         cachedFilters.select.map((filter) => {
           return (
-            filter.options.some((o) => (facets.find((f) => f.key === o.key)?.count as number) > 0) && (
+            filter.options.some((o) => ((facets.find((f) => f.key === o.key) as CountFacet)?.count as number) > 0) && (
               <FormGroup className="mb-32 mt-16" key={filter.key}>
                 <FormLabel aria-label={filter.title} className="mb-16">
                   {filter.title}
                 </FormLabel>
                 {filter.options
-                  .filter((o) => (showFacets ? !facets || facets.find((f) => f.key === o.key)?.count !== 0 : true))
+                  .filter((o) =>
+                    showFacets ? !facets || (facets.find((f) => f.key === o.key) as CountFacet)?.count !== 0 : true
+                  )
                   .map((option) => (
                     <div key={option.key} className="flex items-center">
                       <FormControlLabel
@@ -110,7 +112,9 @@ export default function Filter({ showFacets }: { showFacets: boolean }) {
                       />
                       {showFacets && facets && (
                         <div>
-                          <Typography variant="body2">({facets.find((f) => f.key === option.key)?.count})</Typography>
+                          <Typography variant="body2">
+                            ({(facets.find((f) => f.key === option.key) as CountFacet)?.count})
+                          </Typography>
                         </div>
                       )}
                     </div>

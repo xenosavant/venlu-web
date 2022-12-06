@@ -20,16 +20,12 @@ import { createImage, getCroppedImg } from '@utilities/image';
 import { Web3Storage } from 'web3.storage';
 import { guid } from '@utilities/rand';
 import {
-  FeatureKeys,
   IListing,
   ListingFeatureFacets,
   ListingFeatureNumberKeys,
   ListingFeatureOptionKeys,
   isOptionFeature,
-  ListingFeatureTypes,
-  OPTIONS,
   Options,
-  isNumberFeature,
 } from '../types/listing';
 import { FacetMap, FacetMapping } from '@filter/types/facets';
 import clone from '@utilities/clone';
