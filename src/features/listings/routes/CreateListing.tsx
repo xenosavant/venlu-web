@@ -18,7 +18,6 @@ import { useAppDispatch } from '@store/app';
 import Cropper from 'react-easy-crop';
 import { createImage, getCroppedImg } from '@utilities/image';
 import { Web3Storage } from 'web3.storage';
-import { guid } from '@utilities/rand';
 import {
   IListing,
   ListingFeatureFacets,
@@ -31,6 +30,7 @@ import { FacetMap, FacetMapping } from '@filter/types/facets';
 import clone from '@utilities/clone';
 
 const client = new Web3Storage({ token: import.meta.env.VITE_WEB3_STORAGE_API_KEY });
+const IMAGE_WIDTH = 800 as const;
 
 export function CreateListing({ listing }: HasListing) {
   const [listingState, setlistingState] = useState<IListing>(listing);
@@ -68,10 +68,6 @@ export function CreateListing({ listing }: HasListing) {
     setlistingState({ ...listingState, features: cloned as ListingFeatureFacets });
   };
 
-  useEffect(() => {
-    Object.entries(FacetMapping['amenities']).map(([key, value]) => console.log(isOptionFeature('amenities')));
-  }, []);
-
   const uploadPhoto = async (e: any) => {
     const file = e.target.files[0];
     input.current.value = null;
@@ -79,9 +75,9 @@ export function CreateListing({ listing }: HasListing) {
       const imageString = URL.createObjectURL(file);
       const image = await createImage(imageString);
       const canvas = document.createElement('canvas');
-      if (image.width > 800) {
-        canvas.width = 800;
-        canvas.height = image.height * (800 / image.width);
+      if (image.width > IMAGE_WIDTH) {
+        canvas.width = IMAGE_WIDTH;
+        canvas.height = image.height * (IMAGE_WIDTH / image.width);
       } else {
         canvas.width = image.width;
         canvas.height = image.height;
@@ -190,7 +186,7 @@ export function CreateListing({ listing }: HasListing) {
 
   const cropImage = async () => {
     const blob = await getCroppedImg(currentImage as string, croppedAreaPixels);
-    const identifier = guid();
+    const identifier = crypto.randomUUID();
     const cid = await client.put([new File([blob], `${identifier}.jpg`)]);
     listingState.images?.push(`https://${cid}.ipfs.w3s.link/${identifier}.jpg`);
     setShowCropper(false);

@@ -2,8 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sleep from '../../utilities/sleep';
-import { IFilter } from '../filter/filtersReducer';
-import { IRange, ISelect } from '../filter/types/filter';
+import { IFilter, IRange, ISelect, isRangeFilter, isSelectFilter } from '../filter/types/filter';
 import { IListing, Options } from './types/listing';
 
 export type ResponseStatus = 'idle' | 'loading' | 'success' | 'failed';
@@ -46,20 +45,18 @@ const initialState: ListingState = {
   facets: undefined,
 };
 
-function filterData(data: IListing[], filters: IFilter): IListing[] {
-  const selectFiltered = data.filter((item: IListing) =>
-    filters['select'].every((filter: ISelect) =>
-      filter.selected?.every((selectedValue: Options) =>
-        (item.features[filter.key] as Options[]).includes(selectedValue)
-      )
-    )
-  );
-
-  const filtered = selectFiltered.filter((item: IListing) =>
-    filters['range'].every(
-      (filter: IRange) =>
-        (item.features[filter.key] as number) >= filter.min && (item.features[filter.key] as number) <= filter.max
-    )
+function filterData(data: IListing[], filters: IFilter[]): IListing[] {
+  const filtered = data.filter((item: IListing) =>
+    filters.every((filter) => {
+      if (isSelectFilter(filter)) {
+        return filter.selected?.every((selectedValue: Options) =>
+          (item.features[filter.key] as Options[]).includes(selectedValue)
+        );
+      } else {
+        const max = filter.max === filter.range[1] ? Infinity : filter.max;
+        return (item.features[filter.key] as number) >= filter.min && (item.features[filter.key] as number) <= max;
+      }
+    })
   );
   return filtered;
 }
@@ -91,24 +88,20 @@ function calculateRangeFacets(filters: IRange[], listings: IListing[]): RangeFac
   );
 }
 
-export const fetchListings = createAsyncThunk(
-  'listings/fetchListingsStatus',
-  async (filters: IFilter = { select: [], range: [] }) => {
-    await sleep();
-    const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
-    const filtered = filterData(response.data, filters);
-    const selectFacets = calculateSelectFacets(filters['select'], filtered);
-    const rangeFacets = calculateRangeFacets(filters['range'], response.data);
-    console.log(response);
-    return {
-      listings: filtered,
-      facets: [...rangeFacets, ...selectFacets],
-      count: filtered.length,
-    };
-  }
-);
+export const fetchListings = createAsyncThunk('listings/fetchListingsStatus', async (filters: IFilter[] = []) => {
+  await sleep();
+  const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
+  const filtered = filterData(response.data, filters);
+  const selectFacets = calculateSelectFacets(filters.filter((f) => isSelectFilter(f)) as ISelect[], filtered);
+  const rangeFacets = calculateRangeFacets(filters.filter((f) => isRangeFilter(f)) as IRange[], response.data);
+  return {
+    listings: filtered,
+    facets: [...rangeFacets, ...selectFacets],
+    count: filtered.length,
+  };
+});
 
-export const fetchListingsCount = createAsyncThunk('listings/fetchListingsCount', async (filters: IFilter) => {
+export const fetchListingsCount = createAsyncThunk('listings/fetchListingsCount', async (filters: IFilter[]) => {
   await sleep();
   const response = await axios.get<IListing[]>(`${import.meta.env.VITE_BASE_URL}/listings`);
   const filtered = filterData(response.data, filters);

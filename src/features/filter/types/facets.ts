@@ -36,7 +36,7 @@ export const FacetMapping: FacetMap = {
       catering: 'Catering',
     },
   ],
-  price: ['Price range', [0, 100000]],
+  price: ['Price range', [0, 10000]],
 };
 
 export const EventDisplayValues = Object.entries(FacetMapping['event'][1]).map((v) => v[1]);

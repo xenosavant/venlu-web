@@ -27,7 +27,6 @@ import { useAppDispatch, useAppSelector } from './store/app';
 import { filterModalClosed, filterModalOpened, selectUiState, UiState } from './store/reducers/uiReducer';
 import useQuery from './hooks/useQuery';
 import { CreateListing } from './features/listings/routes/CreateListing';
-import { guid } from './utilities/rand';
 import Book from 'features/bookings/routes/Book';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -280,7 +279,7 @@ function App() {
               <>
                 <CreateListing
                   listing={{
-                    id: guid(),
+                    id: crypto.randomUUID(),
                     title: '',
                     description: '',
                     images: [],

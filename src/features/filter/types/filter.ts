@@ -20,12 +20,15 @@ export interface IRange extends IFilterBase {
   key: ListingFeatureNumberKeys;
   min: number;
   max: number;
+  readonly range: [number, number];
 }
 
-export function isSelectFilter(filter: ISelect | IRange): filter is ISelect {
+export type IFilter = ISelect | IRange;
+
+export function isSelectFilter(filter: IFilter): filter is ISelect {
   return (filter as ISelect).selectType !== undefined;
 }
 
-export function isRangeFilter(filter: ISelect | IRange): filter is IRange {
+export function isRangeFilter(filter: IFilter): filter is IRange {
   return (filter as IRange).min !== undefined;
 }

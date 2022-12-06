@@ -18,7 +18,7 @@ const Listing: React.FC<HasListing> = ({ listing }) => {
         {listing.title}
       </Typography>
       <Typography className="text-zinc-500" variant="subtitle2">
-        {`$${(listing.features.price / 100).toFixed(2)}` + '/ day'}
+        {`$${listing.features.price.toFixed(2)}` + ' / hour'}
       </Typography>
     </div>
   );

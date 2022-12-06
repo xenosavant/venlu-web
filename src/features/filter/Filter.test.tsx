@@ -18,6 +18,7 @@ const priceFilter = {
   title: 'Price range',
   min: 0,
   max: 10000,
+  range: [0, 10000] as [number, number],
 } as const;
 
 const listing = {
@@ -45,7 +46,7 @@ const listingState = {
   },
   filteredCount: 0,
   filteredCountStatus: 'idle',
-  facets: [{ key: 'price', min: 100, max: 100000 } as IRange],
+  facets: [{ key: 'price', min: 100, max: 10000 } as IRange],
 } as ListingState;
 
 describe('filter tests', () => {
@@ -60,10 +61,7 @@ describe('filter tests', () => {
           },
         },
         filter: {
-          filters: {
-            range: [priceFilter],
-            select: [],
-          },
+          filters: [priceFilter],
         },
       },
     });
@@ -86,10 +84,7 @@ describe('filter tests', () => {
           },
         },
         filter: {
-          filters: {
-            range: [priceFilter],
-            select: [],
-          },
+          filters: [priceFilter],
         },
       },
     });
